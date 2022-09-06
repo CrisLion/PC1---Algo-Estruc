@@ -8,8 +8,8 @@ class Iterador {
 
 public:
     Iterador(unsigned int pos, Nodo<T>* aux) : _pos(pos), _aux(aux) {}
-    void operator ++() {++_pos; _aux->_siguiente;}
-    void operator --() {--_pos; _aux->_anterior;}
+    void operator ++() {++_pos; _aux = _aux->_siguiente;}
+    void operator --() {--_pos; _aux = _aux->_anterior;}
     bool operator !=(Iterador iter) {return _pos != iter._pos;}
     T operator *() {return _aux->_dato;}
 };
