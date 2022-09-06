@@ -1,6 +1,6 @@
 #include "Lista.hpp"
 #include "Verificador.hpp"
-#include <string>
+#include "FileHandler.hpp"
 
 class Perro{
 public:
@@ -11,13 +11,23 @@ public:
 
 int main(){
 
-
+    //testeo
     Lista<Perro*> mylista;
     std::string a;
     int opc;
     auto fun = [] (Perro* valor) -> void {std::cout<<valor->anos<<" "<<valor->letra <<" ";};
-
     std::cout<<Verificador::verificarUsuario("74395344","contrasena1234");
+
+    //Testeo
+    Lista<string> mylista2;
+    mylista2.push_back("82950164");
+    mylista2.push_back("MAria");
+    mylista2.push_back("De los santos");
+    mylista2.push_back("micontra1234");
+
+    FileHandler::saveData("Registros/Usuarios.txt",mylista2);
+
+
 
     while (true)
     {
@@ -29,8 +39,4 @@ int main(){
         if (opc == 5) mylista.~Lista();
         if (opc == 6) mylista.displayList(fun);
     }
-    
-    
-    
-
 }
