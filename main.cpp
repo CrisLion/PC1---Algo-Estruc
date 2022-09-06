@@ -29,8 +29,4 @@ int main(){
         if (opc == 5) mylista.~Lista();
         if (opc == 6) mylista.displayList(fun);
     }
-    
-    
-    
-
 }

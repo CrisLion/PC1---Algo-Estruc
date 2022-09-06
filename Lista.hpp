@@ -1,7 +1,9 @@
 #ifndef __LISTA__
 #define __LISTA__
-#include <functional>
-#include <iostream>
+#include "Librerias.hpp"
+#include "Nodo.hpp"
+#include "Iterador.hpp"
+
 template<typename T>
 class Lista {
 public:
@@ -9,7 +11,7 @@ public:
     ~Lista() { while (_cabeza != nullptr) pop_front(); }
 
     void push_front(const T& valor){
-        Nodo* nuevoNodo = new Nodo(valor);
+        Nodo<T>* nuevoNodo = new Nodo<T>(valor);
         if (_n == 0){
             _cabeza = _cola = nuevoNodo;
             _n++;
@@ -22,7 +24,7 @@ public:
     }
 
     void push_back(const T& valor){
-        Nodo* nuevoNodo = new Nodo(valor);
+        Nodo<T>* nuevoNodo = new Nodo<T>(valor);
         if (_n == 0) {
             _cabeza = _cola = nuevoNodo;
             _n++;
@@ -36,7 +38,7 @@ public:
                 
     void pop_front(){
         if (_n != 0){
-            Nodo* aux;
+            Nodo<T>* aux;
             aux = _cabeza;
             if (_cabeza == _cola) _cola == nullptr;
             _cabeza = _cabeza->_siguiente;
@@ -48,7 +50,7 @@ public:
 
     void pop_back(){
         if (_n != 0){
-            Nodo* aux;
+            Nodo<T>* aux;
             aux = _cola;
             if (_cabeza == _cola) _cabeza = nullptr;
             _cola = _cola->_anterior;
@@ -59,12 +61,12 @@ public:
     }
 
     void displayList(std::function<void(T)> printNodeValue){ // [] (T valor) -> void {std::cout<<valor<<" ";};
-        Nodo* aux = _cabeza;
+        Nodo<T>* aux = _cabeza;
         while(aux != nullptr){
             printNodeValue(aux->_dato);
             aux = aux->_siguiente;
         }
-        std::cout<<std::endl;
+        std::cout<<std::endl;     
     }
 
     unsigned int size(){
@@ -79,19 +81,18 @@ public:
         return _cola->_dato;
     }
 
+    Iterador<T> begin(){
+        return Iterador<T>(0,_cabeza);
+    }
+
+    Iterador<T> end(){
+        return Iterador<T>(_n,nullptr);
+    }
+
 private:
-    class Nodo {
-    public:
-        Nodo(T dato) : _dato(dato), _siguiente(nullptr), _anterior(nullptr) {}
-        Nodo() = delete;
-    private:
-        T _dato;
-        Nodo* _siguiente;
-        Nodo* _anterior;
-        friend class Lista;
-    };
-    Nodo* _cabeza;
-    Nodo* _cola;
+    
+    Nodo<T>* _cabeza;
+    Nodo<T>* _cola;
     unsigned int _n;
 };
 

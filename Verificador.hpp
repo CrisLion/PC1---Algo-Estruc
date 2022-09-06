@@ -1,10 +1,6 @@
 #ifndef __FILEHANDLER__
 #define __FILEHANDLER__
 #include "Lista.hpp"
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <conio.h>
 using namespace std;
 
 class Verificador {
