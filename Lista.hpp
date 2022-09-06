@@ -6,6 +6,7 @@ template<typename T>
 class Lista {
 public:
     Lista() : _cabeza(nullptr), _cola(nullptr), _n(0) {}
+    ~Lista() { while (_cabeza != nullptr) pop_front(); }
 
     void push_front(const T& valor){
         Nodo* nuevoNodo = new Nodo(valor);
@@ -64,6 +65,18 @@ public:
             aux = aux->_siguiente;
         }
         std::cout<<std::endl;
+    }
+
+    unsigned int size(){
+        return _n;
+    }
+
+    T get_cabeza(){
+        return _cabeza->_dato;
+    }
+
+    T get_cola(){
+        return _cola->_dato;
     }
 
 private:
