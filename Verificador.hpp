@@ -1,5 +1,5 @@
-#ifndef __FILEHANDLER__
-#define __FILEHANDLER__
+#ifndef __VERIFICADOR__
+#define __VERIFICADOR__
 #include "Lista.hpp"
 using namespace std;
 

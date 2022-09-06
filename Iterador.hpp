@@ -1,5 +1,6 @@
+#ifndef __ITERADOR___
+#define __ITERADOR___
 #include "Nodo.hpp"
-
 template <typename T>
 class Iterador {
     unsigned int _pos;
@@ -12,3 +13,4 @@ public:
     bool operator !=(Iterador iter) {return _pos != iter._pos;}
     T operator *() {return _aux->_dato;}
 };
+#endif

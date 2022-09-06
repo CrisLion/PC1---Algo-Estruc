@@ -10,12 +10,14 @@ public:
         fstream miArchivo;
         string allAtributes;
 
-        miArchivo.open(filePath, ios::app);
-
         for(Iterador<string> iter = listaAtributos.begin(); iter != listaAtributos.end(); ++iter){
-            
+            allAtributes += *iter + ",";    
         }
-
+        allAtributes.pop_back();
+        
+        miArchivo.open(filePath, ios::app);
+        miArchivo<<allAtributes<<'\n';
+        miArchivo.close();
     }
 };
 #endif
