@@ -5,9 +5,6 @@ int main(){
 
     ListaCD<int> lista;
     lista.push_back(1);
-    lista.push_back(12);
-    lista.push_back(14);
-    lista.push_back(15);
     
     Iterador<int> iter = lista.begin();
     bool continuar = true;
@@ -25,6 +22,6 @@ int main(){
         }
         Sleep(30);
         system("cls");
-    
+    }
     return 0;
 }

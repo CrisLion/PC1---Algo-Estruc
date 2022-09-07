@@ -6,7 +6,7 @@ using namespace std;
 using namespace EntidadesMedicas;
 class FileHandler{
 public:
-    static void saveData(string filePath, Lista<string> listaAtributos){ // [obj (class Paciente)] () -> Lista<string> {Lista<string> L}
+    static void saveData(string filePath, Lista<string>& listaAtributos){ // [obj (class Paciente)] () -> Lista<string> {Lista<string> L}
         fstream miArchivo;
         string allAtributes;
 

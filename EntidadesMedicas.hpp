@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 using std::string;
+using std::to_string;
 
 namespace EntidadesMedicas{
 
@@ -11,6 +12,7 @@ namespace EntidadesMedicas{
      "Robles Castillo", "Quito Quito", "Quispe Quispe"};
     string especialidadesDB[] = {"Medicina interna", "Cardiologia", "Neurologia", "Gastrologia", "Neumologia", "Pediatría",
     "Nefrología","Pediatria","Psiquiatria", "Oftalmologia", "Inmunología","Cirugía oral y maxilofacial"};
+    string medicamentosDB[] = {"Panadol", "Ambroxol", "Ibuprofeno", "Aspirina", "Repriman", "Omeprasol", "Amoxicilina"};
 
     struct Paciente{
         string DNI;
@@ -28,15 +30,34 @@ namespace EntidadesMedicas{
         string especialidad;
         Medico() : nombres(nombresDB[rand()%6]), apellidos(apellidosDB[rand()%8]), especialidad(especialidadesDB[rand()%12]),
                    telefono(to_string(rand()% (900000000) + 100000000)) {}
+        Medico(const Medico& medico1){ // copy contructor
+            nombres = medico1.nombres;
+            apellidos = medico1.apellidos;
+            telefono = medico1.telefono;
+            especialidad = medico1.especialidad;
+        }
     };
 
+    struct Medicacion{
+        Medico objMedico;
+        string medicamento;
+
+        Medicacion(const Medico& medico1) :medicamento(medicamentosDB[rand()%7]) {
+            objMedico = Medico(medico1);
+        } 
+    };
     struct Cita{
         string fecha;
         Medico objMedico;
         string hora;
 
-        Cita() : fecha(to_string(rand() % (30) +1) + "/" +  to_string(rand() % (12) +1) + "/2022"),
-                hora(to_string(rand() % (21 - 6+1) +6) + ":" +  to_string(rand() % (5) +1) + to_string(rand() % (9) +1)) {}
+        Cita() : fecha(to_string(rand() % (30) +1) + "/" +  to_string(rand() % (12) +1) + "/2022"),  hora(to_string(rand() % (21 - 6+1) +6) + ":" +  to_string(rand() % (5) +1) + to_string(rand() % (9) +1)), objMedico(Medico()){}
+
+        Cita(const Cita& cita1) {
+            fecha = cita1.fecha;
+            objMedico = cita1.objMedico;
+            hora = cita1.hora;
+        }
     };
 
 }

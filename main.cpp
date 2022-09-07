@@ -3,13 +3,6 @@
 #include "FileHandler.hpp"
 #include "Controladora.hpp"
 
-class Perro{
-public:
-    int anos;
-    char letra;
-    Perro() : anos(rand()), letra(rand() % (90 - 65 +1) +65) {}
-};
-
 int main(){
 
     //testeo

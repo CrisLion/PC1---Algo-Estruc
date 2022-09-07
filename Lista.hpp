@@ -40,7 +40,7 @@ public:
         if (_n != 0){
             Nodo<T>* aux;
             aux = _cabeza;
-            if (_cabeza == _cola) _cola == nullptr;
+            if (_cabeza == _cola) _cola = nullptr;
             _cabeza = _cabeza->_siguiente;
             if (_cabeza != nullptr) _cabeza->_anterior = nullptr;
             delete aux;
