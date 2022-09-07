@@ -11,3 +11,4 @@
 #define IZQUIERDA 75
 #define DERECHA 77
 #define ENTER 13
+#define ESC 27

@@ -108,16 +108,6 @@ public:
         FileHandler::saveData("Registros/Usuarios.txt",temporal);
     }
 
-    void display(){
-        std::cout<< objPaciente->DNI<<" "<<
-                    objPaciente->fechaNacimiento<<" "<<
-                    objPaciente->nombres<<" "<<
-                    objPaciente->apellidos<<" "<<
-                    objPaciente->telefono<<" "<<
-                    objPaciente->contrasena<<std::endl;
-        getch();
-        }
-
     void IniciarPrograma(){
         int opc;
         do{
@@ -130,6 +120,8 @@ public:
                     logIn(); system("cls"); MenuPrincipal();break;
                 case 2: 
                     SignIn();system("cls"); break;
+                default:
+                    system("cls");
             }
         } while(opc != 3);
     }
@@ -137,8 +129,7 @@ public:
     void reservarCitas(){ // Interaccion
         system("cls");
         header();
-        cout << "Opcion: ";
-        int opc;
+        
         ListaCD<Cita> CitasDisponibles;
         for(int i = 0; i < CANTIDAD_CITAS; i++){
             CitasDisponibles.push_back(Cita());
@@ -162,31 +153,31 @@ public:
             cout << "|                     Contacto: " << (*iter).objMedico.telefono << '\n';
             cout << "==========================================\n";
 
-            cout<<"1. Seleccionar esta cita"<<endl;
-            cout<<"2. Siguiente"<<endl;
-            cout<<"3. Atras"<<endl;
-            cout<<"4. Salir"<<endl;
-            cout<<"Opcion: ";cin>>opc;
+            cout<<"INTRO Seleccionar esta cita"<<endl;
+            cout<<"->    Siguiente"<<endl;
+            cout<<"<-    Atras"<<endl;
+            cout<<"ESC   Salir"<<endl;
 
-            switch(opc){
-                case 1:
+            switch(getch()){
+                case ENTER:
                     citasReservadas.push_back(Cita(*iter)); 
                     medicacionesDelPaciente.push_back(Medicacion((*iter).objMedico));
-                    opc = 4;  break;
-                case 2:
+                    return; break;
+                case DERECHA:
                     ++iter; break;
-                case 3:
+                case IZQUIERDA:
                     --iter; break;
+                case ESC:
+                    return ;
             }
 
-        }while(opc != 4);
+        }while(true);
     }
 
 
     void verMisCitas(){
         system("cls");
         header();
-        int opc;
         Iterador<Cita> iter = citasReservadas.begin();
 
         do{
@@ -201,25 +192,26 @@ public:
             cout << "==========================================\n";
 
             
-            cout<<"1. Siguiente"<<endl;
-            cout<<"2. Atras"<<endl;
-            cout<<"3. Salir"<<endl;
-            cout<<"Opcion: ";cin>>opc;
-
-            switch(opc){
-                case 1:
+            cout<<"-> Siguiente"<<endl;
+            cout<<"<- Atras"<<endl;
+            cout<<"ESC Salir"<<endl;
+            
+            switch(getch()){
+                case DERECHA:
                     ++iter; break;
-                case 2:
+                case IZQUIERDA:
                     --iter; break;
+                case ESC:
+                    return;
             }
 
-        }while(opc != 3);
+        }while(true);
     }
 
     void verMisMedicaciones(){ // solo lectura
         system("cls");
         header();
-        int opc;
+        
         Iterador<Medicacion> iter = medicacionesDelPaciente.begin();
         do{
             //Dibujar ficha de Receta
@@ -231,19 +223,20 @@ public:
             cout << "| " << char(190) << " "<< (*iter).medicamento<< '\n';
             cout << "==========================================\n";
 
-            cout<<"1. Siguiente"<<endl;
-            cout<<"2. Atras"<<endl;
-            cout<<"3. Salir"<<endl;
-            cout<<"Opcion: ";cin>>opc;
-
-            switch(opc){
-                case 1:
+            cout<<"-> Siguiente"<<endl;
+            cout<<"<- Atras"<<endl;
+            cout<<"ESC Salir"<<endl;
+           
+            switch(getch()){
+                case DERECHA:
                     ++iter; break;
-                case 2:
+                case IZQUIERDA:
                     --iter; break;
+                case ESC:
+                    return ;
             }
 
-        }while(opc != 3);
+        }while(true);
     }
 
     void MenuCitas(){
