@@ -12,22 +12,23 @@ public:
     ListaCD() : _cabeza(nullptr), _cola(nullptr), _n(0) {}
     ~ListaCD() { while (_cabeza != nullptr) pop_back();}
 
-    void push_back(const T& valor){
-        Nodo<T>* nuevoNodo = new Nodo<T>(valor);
-        if (_n == 0){
-            _cabeza = _cola = nuevoNodo;
-            nuevoNodo->_anterior = nuevoNodo;
-            nuevoNodo->_siguiente = nuevoNodo;
-            ++_n;
+    void push_back(const T& valor){ //O(1)
+        Nodo<T>* nuevoNodo = new Nodo<T>(valor);// 1
+        if (_n == 0){// 1
+            _cabeza = _cola = nuevoNodo; // 2
+            nuevoNodo->_anterior = nuevoNodo; // 2
+            nuevoNodo->_siguiente = nuevoNodo;// 2
+            ++_n; // 2 
             return;
         }
-        nuevoNodo->_anterior = _cola;
-        nuevoNodo->_siguiente = _cabeza;
-        _cabeza->_anterior = nuevoNodo;
-        _cola->_siguiente = nuevoNodo;
-        _cola= nuevoNodo;
-        ++_n;
-    }
+        nuevoNodo->_anterior = _cola; // 2
+        nuevoNodo->_siguiente = _cabeza; // 2
+        _cabeza->_anterior = nuevoNodo; // 2
+        _cola->_siguiente = nuevoNodo; // 2
+        _cola= nuevoNodo; // 1
+        ++_n; // 2
+    } // Analisis Detallado max(1 +2 +2 +2 +2 , 2 +2 +2 +2+1+2) +1 = 11 +1 = 12
+      // Analisis Asintotico = O(1)
 
     void pop_back(){   
         if (_n != 0){// 0  ->  0 -> nu

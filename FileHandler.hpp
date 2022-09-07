@@ -10,8 +10,8 @@ public:
         fstream miArchivo;
         string allAtributes;
 
-        for(Iterador<string> iter = listaAtributos.begin(); iter != listaAtributos.end(); ++iter){
-            allAtributes += *iter + ",";    
+        for(Iterador<string> iter = listaAtributos.begin(); iter != listaAtributos.end(); ++iter){//n
+            allAtributes += *iter + ",";// m + 1
         }
         allAtributes.pop_back();
         
