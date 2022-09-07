@@ -13,12 +13,13 @@ public:
         for(Iterador<string> iter = listaAtributos.begin(); iter != listaAtributos.end(); ++iter){//n
             allAtributes += *iter + ",";// m + 1
         }
-        allAtributes.pop_back();
+        allAtributes.pop_back();//13
         
-        miArchivo.open(filePath, ios::app);
-        miArchivo<<allAtributes<<'\n';
-        miArchivo.close();
-    }
+        miArchivo.open(filePath, ios::app);//1
+        miArchivo<<allAtributes<<'\n';// 1
+        miArchivo.close();//1
+    }//Tiempo detallado: n(m+1) +13 +1 +1 +1 = nm + n + 16
+     //Tiempo asintotico: O(n*m)
 
     static void LoadData(string filePath,string DNI, Paciente*& object){ // [] (Lista<string>) -> T {class Paciente*} {}
         fstream miArchivo;
