@@ -1,7 +1,7 @@
 #ifndef __CONTROLADORA__
 #define __CONTROLADORA__
 #define CANTIDAD_CITAS 10
-#define CANTIDAD_MAX_COLA 10
+#define CANTIDAD_MAX_COLA 5
 #include "EntidadesMedicas.hpp"
 #include "Verificador.hpp"
 #include "FileHandler.hpp"
@@ -16,9 +16,7 @@ private:
     Paciente* objPaciente;
     ListaCD<Cita> citasReservadas;
     ListaCD<Medicacion> medicacionesDelPaciente;
-    Cola<char> colaEspera; 
-    time_t crono_encolar;
-    time_t crono_descolar;
+    Cola<Paciente> colaEspera;
 
     void header(){
         cout << "========================================\n";
@@ -51,6 +49,31 @@ private:
         cout << "      |      (3) => Salir        |      \n";
         cout << "      ============================      \n";
         cout << "                                        \n";
+    }
+
+    void bannerEspera(const int& tam){
+        cout << "      ============================      \n";
+        cout << "      |       "<< tam <<" en la cola       |      \n";
+        cout << "      |      Espere su turno     |       \n";
+        cout << "      |            0.0           |      \n";
+        cout << "      ============================      \n";
+        cout << "                                        \n";
+    }
+
+    void GenerarCola(){
+        int cantidad = rand() % CANTIDAD_MAX_COLA +1;
+        for(int i = 0; i < cantidad; i++){
+            this->colaEspera.enQueue(Paciente());
+        }
+    }
+
+    void Descolar(){
+        do{
+            system("cls");
+            bannerEspera(this->colaEspera.Size());
+            this->colaEspera.deQueue();
+            _sleep(2000);
+        }while(this->colaEspera.Size() != 0);
     }
     
 public:
@@ -132,6 +155,10 @@ public:
     }
 
     void reservarCitas(){ // Interaccion
+
+        GenerarCola();
+        Descolar();
+
         system("cls");
         header();
         
