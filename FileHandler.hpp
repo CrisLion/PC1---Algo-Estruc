@@ -5,15 +5,24 @@
 using namespace std;
 using namespace EntidadesMedicas;
 class FileHandler{
+
+private:
+    static void Atributes_toCSV(string& allAtributes,Lista<string>& listaAtributos ,Iterador<string> iter){
+        if(!(iter != listaAtributos.end())){
+            allAtributes.pop_back();
+            return;
+        }
+        allAtributes += *iter + ",";
+        ++iter;
+        Atributes_toCSV(allAtributes,listaAtributos,iter);
+    }
+
 public:
     static void saveData(string filePath, Lista<string>& listaAtributos){ // [obj (class Paciente)] () -> Lista<string> {Lista<string> L}
         fstream miArchivo;
-        string allAtributes;
+        string allAtributes = "";
 
-        for(Iterador<string> iter = listaAtributos.begin(); iter != listaAtributos.end(); ++iter){//n
-            allAtributes += *iter + ",";// m + 1
-        }
-        allAtributes.pop_back();//13
+        Atributes_toCSV(allAtributes,listaAtributos,listaAtributos.begin());
         
         miArchivo.open(filePath, ios::app);//1
         miArchivo<<allAtributes<<'\n';// 1

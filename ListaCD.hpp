@@ -1,7 +1,8 @@
 #include "Nodo.hpp"
 #include "Iterador.hpp"
 #include <iostream>
-
+#include <functional>
+using std::function;
 template<typename T>
 class ListaCD{ //Lista circular doblemente enlazada
 private:
@@ -45,6 +46,36 @@ public:
             delete aux;
             --_n;
         }
+    }
+
+    void Sort(function<bool(T& a, T& b)> compare){
+
+        int size = this->_n;
+        T* aux = new T[size];
+
+        int i = 0;
+        for (Iterador<T> iter = this->begin(); i < size; ++iter){
+            aux[i] = *iter;
+            i++;
+        }
+
+        this->~ListaCD();
+
+        for(int i = 1; i < size; i++){
+            T key = aux[i];
+            int k = i-1;
+            while(k>=0 && compare(aux[k],key)){
+                aux[k+1] = aux[k];
+                k--;
+            }
+            aux[k+1] = key;
+        }
+
+        for(int i = 0; i < size; i++){
+            this->push_back(aux[i]);
+        }
+        
+        delete aux;
     }
 
     unsigned int size(){
