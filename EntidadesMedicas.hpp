@@ -2,6 +2,7 @@
 #define __ENTIDADESMEDICAS__
 #include <iostream>
 #include <string>
+#include "Date.hpp"
 using std::string;
 using std::to_string;
 
@@ -47,16 +48,18 @@ namespace EntidadesMedicas{
         } 
     };
     struct Cita{
-        string fecha;
+        //string fecha;
         Medico objMedico;
         string hora;
+        Date fecha;
 
-        Cita() : fecha(to_string(rand() % (30) +1) + "/" +  to_string(rand() % (12) +1) + "/2022"),  hora(to_string(rand() % (21 - 6+1) +6) + ":" +  to_string(rand() % (5) +1) + to_string(rand() % (9) +1)), objMedico(Medico()){}
+        Cita() : fecha(Date()),  hora(to_string(rand() % (21 - 6+1) +6) + ":" +  to_string(rand() % (5) +1) + to_string(rand() % (9) +1)), objMedico(Medico()){}
 
         Cita(const Cita& cita1) {
-            fecha = cita1.fecha;
+            //fecha = cita1.fecha;
             objMedico = cita1.objMedico;
             hora = cita1.hora;
+            fecha = cita1.fecha;
         }
     };
 

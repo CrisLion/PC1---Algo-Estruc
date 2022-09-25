@@ -1,10 +1,12 @@
 #ifndef __CONTROLADORA__
 #define __CONTROLADORA__
 #define CANTIDAD_CITAS 10
+#define CANTIDAD_MAX_COLA 10
 #include "EntidadesMedicas.hpp"
 #include "Verificador.hpp"
 #include "FileHandler.hpp"
 #include "ListaCD.hpp"
+#include "Cola.hpp"
 
 using std::cout;
 using namespace EntidadesMedicas;
@@ -13,7 +15,10 @@ class Controladora{
 private:
     Paciente* objPaciente;
     ListaCD<Cita> citasReservadas;
-    ListaCD<Medicacion> medicacionesDelPaciente; 
+    ListaCD<Medicacion> medicacionesDelPaciente;
+    Cola<char> colaEspera; 
+    time_t crono_encolar;
+    time_t crono_descolar;
 
     void header(){
         cout << "========================================\n";
@@ -194,6 +199,7 @@ public:
             
             cout<<"-> Siguiente"<<endl;
             cout<<"<- Atras"<<endl;
+            cout<<"^ Ordenar"<<endl;
             cout<<"ESC Salir"<<endl;
             
             switch(getch()){
@@ -201,10 +207,16 @@ public:
                     ++iter; break;
                 case IZQUIERDA:
                     --iter; break;
+                case ARRIBA:
+                    {
+                        auto compare = [] (Cita& a, Cita& key) -> bool {return a.fecha > key.fecha;};
+                        citasReservadas.Sort(compare);
+                        iter = citasReservadas.begin();
+                        break;
+                    }
                 case ESC:
                     return;
             }
-
         }while(true);
     }
 

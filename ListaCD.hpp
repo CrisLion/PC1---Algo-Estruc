@@ -2,7 +2,9 @@
 #include "Iterador.hpp"
 #include <iostream>
 #include <functional>
+#include <vector>
 using std::function;
+using std::vector;
 template<typename T>
 class ListaCD{ //Lista circular doblemente enlazada
 private:
@@ -48,14 +50,14 @@ public:
         }
     }
 
-    void Sort(function<bool(const T&, const T&)> compare){
+    void Sort(function<bool(T&, T&)> compare){
 
         int size = this->_n;
-        T* aux = new T[size];
+        vector<T> aux;
 
         int i = 0;
         for (Iterador<T> iter = this->begin(); i < size; ++iter){
-            aux[i] = *iter;
+            aux.emplace_back(*iter);
             i++;
         }
 
@@ -74,8 +76,6 @@ public:
         for(int i = 0; i < size; i++){
             this->push_back(aux[i]);
         }
-        
-        delete aux;
     }
 
     unsigned int size(){

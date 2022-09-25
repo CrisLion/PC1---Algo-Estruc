@@ -3,7 +3,6 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <vector>
 #include <conio.h>
 // ---
 #define ARRIBA 72
