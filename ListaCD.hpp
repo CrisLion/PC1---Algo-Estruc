@@ -48,7 +48,7 @@ public:
         }
     }
 
-    void Sort(function<bool(T& a, T& b)> compare){
+    void Sort(function<bool(const T&, const T&)> compare){
 
         int size = this->_n;
         T* aux = new T[size];

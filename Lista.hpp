@@ -69,6 +69,22 @@ public:
         std::cout<<std::endl;     
     }
 
+    void Sort(std::function<bool(const T&, const T&)> compare){
+        for(Nodo<T>* i = this->_cabeza; i != nullptr; i = i->_siguiente){
+            bool isSorted = true;
+            for(Nodo<T>* j = i->_siguiente; j != nullptr; j = j->_siguiente){
+                    
+                    if(compare(i->_dato, j->_dato)){
+                        T aux = i->_dato;
+                        i->_dato = j->_dato;
+                        j->_dato = aux;
+                        isSorted = false;
+                    }
+            }
+            if (isSorted) break;
+        }
+    }
+
     unsigned int size(){
         return _n;
     }
