@@ -20,18 +20,20 @@ public:
         }
     }
 
-    void enQueue(const T& value){
-        std::shared_ptr<SNodo<T>> aux = std::make_shared<SNodo<T>>(value);
-        if (size == 0){
-            head = aux;
-            rear = aux;
-            ++size;
-            return;
+    void enQueue(const T& value){                                               // O(1)
+        std::shared_ptr<SNodo<T>> aux = std::make_shared<SNodo<T>>(value);  // 1
+        if (size == 0){                                                     // 1
+            head = aux;                                                     // 1
+            rear = aux;                                                     // 1
+            ++size;                                                         // 2
+            return;                                                         // 1
         }
-        rear->siguiente = aux;
-        rear = aux;
-        ++size;
+        rear->siguiente = aux;                                              // 1
+        rear = aux;                                                         // 1
+        ++size;                                                             // 2
     }
+    // Analisis Detallado: 1 + 1 + 1 + 1 + 2 + 1 + 1 + 1 + 2 = 11
+    // Tiempo Asintotico: O(1)
 
     size_t Size(){
         return size;

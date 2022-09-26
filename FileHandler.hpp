@@ -7,15 +7,18 @@ using namespace EntidadesMedicas;
 class FileHandler{
 
 private:
-    static void Atributes_toCSV(string& allAtributes,Lista<string>& listaAtributos ,Iterador<string> iter){
-        if(!(iter != listaAtributos.end())){
-            allAtributes.pop_back();
-            return;
-        }
-        allAtributes += *iter + ",";
-        ++iter;
-        Atributes_toCSV(allAtributes,listaAtributos,iter);
+    static void Atributes_toCSV(string& allAtributes,Lista<string>& listaAtributos ,Iterador<string> iter){ // O(n)
+        if(!(iter != listaAtributos.end())){                // n
+            allAtributes.pop_back();                        // 1
+            return;                                         // 1
+        }           
+        allAtributes += *iter + ",";                        // 2
+        ++iter;                                             // 2
+        Atributes_toCSV(allAtributes,listaAtributos,iter);  // 1
     }
+    // Analisis Detallado: n + 1 + 1 + 2 + 2 + 1  = n + 7
+    // Tiempo Asintotico: O(n)
+
 
 public:
     static void saveData(string filePath, Lista<string>& listaAtributos){ // [obj (class Paciente)] () -> Lista<string> {Lista<string> L}
