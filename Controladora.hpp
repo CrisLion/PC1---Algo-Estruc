@@ -61,11 +61,10 @@ private:
         cout << "                                        \n";
     }
 
-    void GenerarCola(){
-        int cantidad = rand() % CANTIDAD_MAX_COLA +1;
-        for(int i = 0; i < cantidad; i++){
-            this->colaEspera.enQueue(Paciente());
-        }
+    void GenerarCola(int n){ //rand() % CANTIDAD_MAX_COLA +1
+        if (n == 0) return;
+        this->colaEspera.enQueue(Paciente());
+        GenerarCola(--n);
     }
 
     void Descolar(){
@@ -176,7 +175,7 @@ public:
 
     void reservarCitas(){ // Interaccion
 
-        GenerarCola();
+        GenerarCola(rand() % CANTIDAD_MAX_COLA +1);
         Descolar();
 
         system("cls");
