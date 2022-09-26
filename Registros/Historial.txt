@@ -1,0 +1,5 @@
+12357612,Cris,Quito
+4323243,Juan,Ramirez
+12357612,Cris,Quito
+12357612,Cris,Quito
+6,6,6

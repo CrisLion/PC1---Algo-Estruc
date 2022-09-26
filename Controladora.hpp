@@ -26,9 +26,10 @@ private:
     }
     void bannerInicial(){
         cout << "        ========================        \n";
-        cout << "        |    (1) => Ingresar   |        \n";
+        cout << "        |   (1) => Ingresar    |        \n";
         cout << "        |   (2) => Registrase  |        \n";
-        cout << "        |     (3) => Salir     |        \n";
+        cout << "        |   (3) => Historial   |        \n";
+        cout << "        |   (4) => Salir       |        \n";
         cout << "        ========================        \n";
         cout << "                                        \n";
     }
@@ -75,6 +76,16 @@ private:
             _sleep(2000);
         }while(this->colaEspera.Size() != 0);
     }
+
+    void VerHistorial(){
+        system("cls");
+        header();
+        Pila<string> pilaHistorial;
+        FileHandler::LoadHistory("Registros/Historial.txt",pilaHistorial);
+        auto PrintValue = [] (string &a) ->void {cout<<a<<endl;};
+        pilaHistorial.seek(PrintValue);
+        getch();
+    }
     
 public:
     Controladora() {}
@@ -99,6 +110,13 @@ public:
             objPaciente = new Paciente();
             cout << "Usuario verificado\n";
             FileHandler::LoadData("Registros/Usuarios.txt",DNI, objPaciente);
+            //Dando los datos necesarios para el llenado de mi historial txt
+            Lista<string> temporal;
+            temporal.push_back(objPaciente->DNI);
+            temporal.push_back(objPaciente->nombres);
+            temporal.push_back(objPaciente->apellidos);
+            FileHandler::saveData("Registros/Historial.txt",temporal);
+
             return;
         }
         else {
@@ -148,10 +166,12 @@ public:
                     logIn(); system("cls"); MenuPrincipal();break;
                 case 2: 
                     SignIn();system("cls"); break;
+                case 3:
+                    VerHistorial(); break;
                 default:
                     system("cls");
             }
-        } while(opc != 3);
+        } while(opc != 4);
     }
 
     void reservarCitas(){ // Interaccion
@@ -288,7 +308,7 @@ public:
                 reservarCitas(); break;
                 break;
             case 2:
-                verMisCitas();
+                if(citasReservadas.size() != 0) verMisCitas();
                 break;
             case 3:
                 system("cls");
@@ -315,7 +335,7 @@ public:
                     MenuCitas();                
                     break;
                 case 2:
-                    verMisMedicaciones();
+                    if(medicacionesDelPaciente.size() != 0) verMisMedicaciones();
                     break;
                 case 3:
                     system("cls");
