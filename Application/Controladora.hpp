@@ -1,12 +1,21 @@
 #ifndef __CONTROLADORA__
 #define __CONTROLADORA__
+
+#include <conio.h>
+#include "../EsSaludEntities/EntidadesMedicas.hpp"
+#include "../StaticClasses/Verificador.hpp"
+#include "../StaticClasses/FileHandler.hpp"
+#include "../DoubleNodeStructures/ListaCD.hpp"
+#include "../SimpleNodeStructures/Cola.hpp"
+
 #define CANTIDAD_CITAS 10
 #define CANTIDAD_MAX_COLA 5
-#include "EntidadesMedicas.hpp"
-#include "Verificador.hpp"
-#include "FileHandler.hpp"
-#include "ListaCD.hpp"
-#include "Cola.hpp"
+#define ARRIBA 72
+#define ABAJO 80
+#define IZQUIERDA 75
+#define DERECHA 77
+#define ENTER 13
+#define ESC 27
 
 using std::cout;
 using namespace EntidadesMedicas;
@@ -80,7 +89,7 @@ private:
         system("cls");
         header();
         Pila<string> pilaHistorial;
-        FileHandler::LoadHistory("Registros/Historial.txt",pilaHistorial);
+        FileHandler::LoadHistory("../Registros/Historial.txt",pilaHistorial);
         auto PrintValue = [] (string &a) ->void {cout<<a<<endl;};
         pilaHistorial.seek(PrintValue);
         getch();
@@ -108,13 +117,13 @@ public:
         if(Verificador::verificarUsuario(DNI,contrasena)){
             objPaciente = new Paciente();
             cout << "Usuario verificado\n";
-            FileHandler::LoadData("Registros/Usuarios.txt",DNI, objPaciente);
+            FileHandler::LoadData("../Registros/Usuarios.txt",DNI, objPaciente);
             //Dando los datos necesarios para el llenado de mi historial txt
             Lista<string> temporal;
             temporal.push_back(objPaciente->DNI);
             temporal.push_back(objPaciente->nombres);
             temporal.push_back(objPaciente->apellidos);
-            FileHandler::saveData("Registros/Historial.txt",temporal);
+            FileHandler::saveData("../Registros/Historial.txt",temporal);
 
             return;
         }
@@ -150,7 +159,7 @@ public:
         cout << "\nIngresa su contrasena: ";
         getline(std::cin,contrasena); temporal.push_back(contrasena);
 
-        FileHandler::saveData("Registros/Usuarios.txt",temporal);
+        FileHandler::saveData("../Registros/Usuarios.txt",temporal);
     }
 
     void IniciarPrograma(){

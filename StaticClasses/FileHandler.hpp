@@ -1,8 +1,12 @@
 #ifndef __FILEHANDLER__
 #define __FILEHANDLER__
-#include "Lista.hpp"
-#include "EntidadesMedicas.hpp"
-#include "Pila.hpp"
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include "../DoubleNodeStructures/Lista.hpp"
+#include "../EsSaludEntities/EntidadesMedicas.hpp"
+#include "../SimpleNodeStructures/Pila.hpp"
 using namespace std;
 using namespace EntidadesMedicas;
 class FileHandler{

@@ -1,6 +1,9 @@
 #ifndef __VERIFICADOR__
 #define __VERIFICADOR__
-#include "Lista.hpp"
+#include <fstream>
+#include <string>
+#include <sstream>
+#include "../DoubleNodeStructures/Lista.hpp"
 using namespace std;
 
 class Verificador {
@@ -10,7 +13,7 @@ public:
         string linea, palabra;// 1
         fstream miArchivo; //1
 
-        miArchivo.open("Registros/Usuarios.txt", ios::in);// 1
+        miArchivo.open("../Registros/Usuarios.txt", ios::in);// 1
         while (getline(miArchivo, linea)){ //Iteracion para recorrer de linea en linea //n +1
 
             stringstream total(linea);// 1
