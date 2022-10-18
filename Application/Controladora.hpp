@@ -1,12 +1,21 @@
 #ifndef __CONTROLADORA__
 #define __CONTROLADORA__
+
+#include <conio.h>
+#include "../EsSaludEntities/EntidadesMedicas.hpp"
+#include "../StaticClasses/Verificador.hpp"
+#include "../StaticClasses/FileHandler.hpp"
+#include "../DoubleNodeStructures/ListaCD.hpp"
+#include "../SimpleNodeStructures/Cola.hpp"
+
 #define CANTIDAD_CITAS 10
 #define CANTIDAD_MAX_COLA 5
-#include "EntidadesMedicas.hpp"
-#include "Verificador.hpp"
-#include "FileHandler.hpp"
-#include "ListaCD.hpp"
-#include "Cola.hpp"
+#define ARRIBA 72
+#define ABAJO 80
+#define IZQUIERDA 75
+#define DERECHA 77
+#define ENTER 13
+#define ESC 27
 
 using std::cout;
 using namespace EntidadesMedicas;
@@ -26,9 +35,10 @@ private:
     }
     void bannerInicial(){
         cout << "        ========================        \n";
-        cout << "        |    (1) => Ingresar   |        \n";
+        cout << "        |   (1) => Ingresar    |        \n";
         cout << "        |   (2) => Registrase  |        \n";
-        cout << "        |     (3) => Salir     |        \n";
+        cout << "        |   (3) => Historial   |        \n";
+        cout << "        |   (4) => Salir       |        \n";
         cout << "        ========================        \n";
         cout << "                                        \n";
     }
@@ -60,11 +70,10 @@ private:
         cout << "                                        \n";
     }
 
-    void GenerarCola(){
-        int cantidad = rand() % CANTIDAD_MAX_COLA +1;
-        for(int i = 0; i < cantidad; i++){
-            this->colaEspera.enQueue(Paciente());
-        }
+    void GenerarCola(int n){ //rand() % CANTIDAD_MAX_COLA +1
+        if (n == 0) return;
+        this->colaEspera.enQueue(Paciente());
+        GenerarCola(--n);
     }
 
     void Descolar(){
@@ -74,6 +83,16 @@ private:
             this->colaEspera.deQueue();
             _sleep(2000);
         }while(this->colaEspera.Size() != 0);
+    }
+
+    void VerHistorial(){
+        system("cls");
+        header();
+        Pila<string> pilaHistorial;
+        FileHandler::LoadHistory("../Registros/Historial.txt",pilaHistorial);
+        auto PrintValue = [] (string &a) ->void {cout<<a<<endl;};
+        pilaHistorial.seek(PrintValue);
+        getch();
     }
     
 public:
@@ -98,7 +117,14 @@ public:
         if(Verificador::verificarUsuario(DNI,contrasena)){
             objPaciente = new Paciente();
             cout << "Usuario verificado\n";
-            FileHandler::LoadData("Registros/Usuarios.txt",DNI, objPaciente);
+            FileHandler::LoadData("../Registros/Usuarios.txt",DNI, objPaciente);
+            //Dando los datos necesarios para el llenado de mi historial txt
+            Lista<string> temporal;
+            temporal.push_back(objPaciente->DNI);
+            temporal.push_back(objPaciente->nombres);
+            temporal.push_back(objPaciente->apellidos);
+            FileHandler::saveData("../Registros/Historial.txt",temporal);
+
             return;
         }
         else {
@@ -133,7 +159,7 @@ public:
         cout << "\nIngresa su contrasena: ";
         getline(std::cin,contrasena); temporal.push_back(contrasena);
 
-        FileHandler::saveData("Registros/Usuarios.txt",temporal);
+        FileHandler::saveData("../Registros/Usuarios.txt",temporal);
     }
 
     void IniciarPrograma(){
@@ -148,15 +174,17 @@ public:
                     logIn(); system("cls"); MenuPrincipal();break;
                 case 2: 
                     SignIn();system("cls"); break;
+                case 3:
+                    VerHistorial(); break;
                 default:
                     system("cls");
             }
-        } while(opc != 3);
+        } while(opc != 4);
     }
 
     void reservarCitas(){ // Interaccion
 
-        GenerarCola();
+        GenerarCola(rand() % CANTIDAD_MAX_COLA +1);
         Descolar();
 
         system("cls");
@@ -288,7 +316,7 @@ public:
                 reservarCitas(); break;
                 break;
             case 2:
-                verMisCitas();
+                if(citasReservadas.size() != 0) verMisCitas();
                 break;
             case 3:
                 system("cls");
@@ -315,7 +343,7 @@ public:
                     MenuCitas();                
                     break;
                 case 2:
-                    verMisMedicaciones();
+                    if(medicacionesDelPaciente.size() != 0) verMisMedicaciones();
                     break;
                 case 3:
                     system("cls");

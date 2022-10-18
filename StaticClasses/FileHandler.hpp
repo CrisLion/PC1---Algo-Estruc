@@ -1,7 +1,12 @@
 #ifndef __FILEHANDLER__
 #define __FILEHANDLER__
-#include "Lista.hpp"
-#include "EntidadesMedicas.hpp"
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include "../DoubleNodeStructures/Lista.hpp"
+#include "../EsSaludEntities/EntidadesMedicas.hpp"
+#include "../SimpleNodeStructures/Pila.hpp"
 using namespace std;
 using namespace EntidadesMedicas;
 class FileHandler{
@@ -62,6 +67,24 @@ public:
             listaTemporal.~Lista();
         }
         miArchivo.close();
+    }
+    
+    static void LoadHistory(string filePath, Pila<string>& pilaHistorial){
+        fstream miArchivo;
+        string linea, palabra;
+        string cadenaCompleta;
+        
+        miArchivo.open(filePath, ios::in);
+        while (getline(miArchivo, linea)){ //Iteracion para recorrer de linea en linea
+
+            stringstream total(linea);
+            while(getline(total,palabra, ',')){ //iteracion para recorrer de palabra en palabra de una linea separada por comas  
+                cadenaCompleta += palabra + "-"; 
+            }
+            cadenaCompleta.pop_back();
+            pilaHistorial.push(cadenaCompleta);
+            cadenaCompleta.clear();
+        }
     }
 };
 #endif

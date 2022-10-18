@@ -1,6 +1,7 @@
 #ifndef __LISTA__
 #define __LISTA__
-#include "Librerias.hpp"
+#include <iostream>
+#include <functional>
 #include "Nodo.hpp"
 #include "Iterador.hpp"
 
@@ -69,19 +70,19 @@ public:
         std::cout<<std::endl;     
     }
 
-    void Sort(std::function<bool(const T&, const T&)> compare){
-        for(Nodo<T>* i = this->_cabeza; i != nullptr; i = i->_siguiente){
-            bool isSorted = true;
-            for(Nodo<T>* j = i->_siguiente; j != nullptr; j = j->_siguiente){
-                    
-                    if(compare(i->_dato, j->_dato)){
-                        T aux = i->_dato;
-                        i->_dato = j->_dato;
-                        j->_dato = aux;
-                        isSorted = false;
-                    }
+    void Sort(std::function<bool(const T&, const T&)> compare){ // 11, 901, 58, 18
+        Nodo<T>* iter = _cabeza;
+        
+        while(iter != _cola){
+            if (compare(iter->_dato, iter->_siguiente->_dato)){
+                T aux = iter->_dato;
+                iter->_dato = iter->_siguiente->_dato;
+                iter->_siguiente->_dato = aux;
+
+                if(iter != _cabeza) iter = iter->_anterior;
+                continue;
             }
-            if (isSorted) break;
+            iter = iter->_siguiente;
         }
     }
 

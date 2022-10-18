@@ -1,7 +1,4 @@
-#include "Lista.hpp"
-#include "Verificador.hpp"
-#include "FileHandler.hpp"
-#include "Controladora.hpp"
+#include "../Application/Controladora.hpp"
 
 int main(){
     srand(time(NULL));
