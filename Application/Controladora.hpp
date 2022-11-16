@@ -7,6 +7,7 @@
 #include "../StaticClasses/FileHandler.hpp"
 #include "../DoubleNodeStructures/ListaCD.hpp"
 #include "../SimpleNodeStructures/Cola.hpp"
+#include "../AdvancedSorting/SortingAlgorithms.hpp"
 
 #define CANTIDAD_CITAS 10
 #define CANTIDAD_MAX_COLA 5
@@ -18,7 +19,9 @@
 #define ESC 27
 
 using std::cout;
+using std::vector;
 using namespace EntidadesMedicas;
+using namespace SortingAlgorithms;
 
 class Controladora{
 private:
@@ -26,6 +29,9 @@ private:
     ListaCD<Cita> citasReservadas;
     ListaCD<Medicacion> medicacionesDelPaciente;
     Cola<Paciente> colaEspera;
+
+    vector<Cita> citasReservadasV;
+    vector<Medicacion> medicacionesDelPacienteV;
 
     void header(){
         cout << "========================================\n";
@@ -222,6 +228,9 @@ public:
                 case ENTER:
                     citasReservadas.push_back(Cita(*iter)); 
                     medicacionesDelPaciente.push_back(Medicacion((*iter).objMedico));
+
+                    citasReservadasV.push_back(Cita(*iter)); 
+                    medicacionesDelPacienteV.push_back(Medicacion((*iter).objMedico));
                     return; break;
                 case DERECHA:
                     ++iter; break;
@@ -254,7 +263,7 @@ public:
             
             cout<<"-> Siguiente"<<endl;
             cout<<"<- Atras"<<endl;
-            cout<<"^ Ordenar"<<endl;
+            cout<<"^ Ordenar por fecha"<<endl;
             cout<<"ESC Salir"<<endl;
             
             switch(getch()){
@@ -292,6 +301,7 @@ public:
 
             cout<<"-> Siguiente"<<endl;
             cout<<"<- Atras"<<endl;
+            cout<<"/\\ Ver registro: "<<endl;
             cout<<"ESC Salir"<<endl;
            
             switch(getch()){
@@ -299,6 +309,10 @@ public:
                     ++iter; break;
                 case IZQUIERDA:
                     --iter; break;
+                case ARRIBA:{
+                    VerRegistrio();
+                    break;
+                }
                 case ESC:
                     return ;
             }
@@ -306,6 +320,21 @@ public:
         }while(true);
     }
 
+    void VerRegistrio(){
+        system("cls");
+        header();
+        auto compare = [](const Medicacion& a,const  Medicacion& b) -> bool  {
+            return a < b;
+        };
+        quickSort<Medicacion>(medicacionesDelPacienteV, compare, 0, medicacionesDelPacienteV.size() - 1);
+        // MergeSort<Medicacion>(medicacionesDelPacienteV, compare, 0 , medicacionesDelPacienteV.size() - 1);
+
+        for (int  i = 0; i < medicacionesDelPacienteV.size(); i++)
+        {
+            std::cout << medicacionesDelPacienteV.at(i) << '\n';
+        }
+        cin.get();
+    }
     void MenuCitas(){
         system("cls");
         header();
@@ -344,10 +373,10 @@ public:
                     break;
                 case 2:
                     if(medicacionesDelPaciente.size() != 0) verMisMedicaciones();
-                    break;
+                    break;                
                 case 3:
-                    system("cls");
-                    return;
+                system("cls");
+                return;
             }
         } while(opc != 3);  
     }

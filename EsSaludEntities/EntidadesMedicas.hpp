@@ -30,7 +30,7 @@ namespace EntidadesMedicas{
         string telefono;
         string especialidad;
         Medico() : nombres(nombresDB[rand()%6]), apellidos(apellidosDB[rand()%8]), especialidad(especialidadesDB[rand()%12]),
-                   telefono(to_string(rand()% (900000000) + 100000000)) {}
+                   telefono(to_string( rand()% 100000000 + 999000000 )) {}
         Medico(const Medico& medico1){ // copy contructor
             nombres = medico1.nombres;
             apellidos = medico1.apellidos;
@@ -45,7 +45,16 @@ namespace EntidadesMedicas{
 
         Medicacion(const Medico& medico1) :medicamento(medicamentosDB[rand()%7]) {
             objMedico = Medico(medico1);
-        } 
+        }
+
+        bool operator<(const Medicacion& other) const {
+            return this->medicamento.compare(other.medicamento) < 0;
+        }
+        friend std::ostream& operator<<(std::ostream& COUT, const Medicacion& obj) {
+            COUT << obj.medicamento << "\tDr. " << obj.objMedico.apellidos << " " << obj.objMedico.nombres ;
+            return COUT;
+        }
+        Medicacion(){}
     };
     struct Cita{
         //string fecha;
