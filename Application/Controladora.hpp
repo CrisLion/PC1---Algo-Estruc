@@ -8,6 +8,7 @@
 #include "../DoubleNodeStructures/ListaCD.hpp"
 #include "../SimpleNodeStructures/Cola.hpp"
 #include "../AdvancedSorting/SortingAlgorithms.hpp"
+#include "../AdvancedStructure/HashTable.hpp"
 #include <math.h>
 
 
@@ -24,17 +25,19 @@ using std::cout;
 using std::vector;
 using namespace EntidadesMedicas;
 using namespace SortingAlgorithms;
-
+auto show=[](const Paciente& a)->void{cout<<a.nombres<<" "<<a.apellidos<<"/";};
+HashTable<Paciente> RegistroPaciente (50,show);
 class Controladora{
 private:
+    
     Paciente* objPaciente;
     ListaCD<Cita> citasReservadas;
     ListaCD<Medicacion> medicacionesDelPaciente;
     Cola<Paciente> colaEspera;
-
     vector<Cita> citasReservadasV;
     vector<Medicacion> medicacionesDelPacienteV;
 
+   
     void header(){
         cout << "========================================\n";
         cout << "|               EsLaSalud              |\n";
@@ -46,7 +49,9 @@ private:
         cout << "        |   (1) => Ingresar    |        \n";
         cout << "        |   (2) => Registrase  |        \n";
         cout << "        |   (3) => Historial   |        \n";
-        cout << "        |   (4) => Salir       |        \n";
+        cout << "        |   (4) => Buscar      |        \n";
+        cout << "        |   (5) => Eliminar    |        \n";
+        cout << "        |   (6) => Salir       |        \n";
         cout << "        ========================        \n";
         cout << "                                        \n";
     }
@@ -89,7 +94,7 @@ private:
             system("cls");
             bannerEspera(this->colaEspera.Size());
             this->colaEspera.deQueue();
-            _sleep(2000);
+            //_sleep(2000);
         }while(this->colaEspera.Size() != 0);
     }
 
@@ -103,8 +108,19 @@ private:
         getch();
     }
     
+    void bannerMostrar(Paciente paciente){
+                    cout<<"||======Datos-Paciente================"<<endl;
+                    cout<<"|| Nombre           : "<<paciente.nombres<<endl;
+                    cout<<"|| Apellido         : "<<paciente.apellidos<<endl;
+                    cout<<"|| DNI              : "<<paciente.DNI<<endl;
+                    cout<<"|| Fecha Nacimiento : "<<paciente.fechaNacimiento<<endl;
+                    cout<<"|| Telefono         : "<<paciente.telefono<<endl;
+                    cout<<"||===================================="<<endl;
+    }
 public:
-    Controladora() {}
+    Controladora() {
+        
+    }
     ~Controladora() { delete objPaciente; }
     
     
@@ -145,7 +161,8 @@ public:
         }
     }
 
-    void SignIn(){        
+    void SignIn(){   
+        Paciente paciente;     
         string DNI;
         string FechaNacimiento;
         string nombre;
@@ -166,12 +183,17 @@ public:
         getline(std::cin,telefono); temporal.push_back(telefono);
         cout << "\nIngresa su contrasena: ";
         getline(std::cin,contrasena); temporal.push_back(contrasena);
-
         FileHandler::saveData("../Registros/Usuarios.txt",temporal);
+
+        paciente.DNI=DNI;paciente.fechaNacimiento=FechaNacimiento;
+        paciente.nombres=nombre;paciente.apellidos=apellido;
+        paciente.telefono=telefono;paciente.contrasena=contrasena;
+
+        RegistroPaciente.insert(contrasena,paciente);
     }
 
     void GeneradorDatos(){
-
+        Paciente paciente;
         string nombres[10] = { "Hector","Louis","Javier","Diego","Collen",
             "Katy","Jhems","Leonardo","Cristian","Steve" };
 
@@ -184,46 +206,54 @@ public:
            "L","g","c","s","#","q","z","u","i","o","P","n","M","B","X","Z","R","H","k" };
 
         string aux = "";
-
-        for (int i = 0; i < pow(10,6); i++) {
+        string DNI,date,name,lastn,telef,pswrd;
+        for (int i = 0; i < 20; i++) {
 
             //Appending a DNI
+            DNI="";
             for (int i = 0; i < 9; i++) {
-                aux += numeros[rand() % 10];
+                DNI += numeros[rand() % 10];
             }
-            aux += ",";
+            paciente.DNI=DNI;
 
             //Appending the date
+            date="";
             int dia = (rand() % 31) + 1;
             if (dia < 10)
-                aux += '0' + to_string(dia) + '/';
+                date += '0' + to_string(dia) + '/';
             else
-                aux += to_string(dia) + '/';
+                date += to_string(dia) + '/';
             int mes = rand() % 12 + 1;
             if (mes < 10)
-                aux += '0' + to_string(mes) + '/';
+                date += '0' + to_string(mes) + '/';
             else
-                aux += to_string(mes) + '/';
-            aux += to_string((rand() % 63) + 1960);
-            aux += ",";
+                date += to_string(mes) + '/';
+            date += to_string((rand() % 63) + 1960);
+            paciente.fechaNacimiento=date;
 
             //Appending a name
-            aux += nombres[(rand() % 10) + 1];
-            aux += ",";
+            name="";
+            name += nombres[(rand() % 10) + 1];
+            paciente.nombres=name;
 
             //Appending a last name
-            aux += apellidos[(rand() % 10) + 1];
-            aux += ",";
+            lastn="";
+            lastn += apellidos[(rand() % 10) + 1];
+            paciente.apellidos=lastn;
 
             //Appending the telephone
-            aux += to_string((rand() % 40000000) + 960000000);
-            aux += ",";
+            telef="";
+            telef += to_string((rand() % 40000000) + 960000000);
+            paciente.telefono=telef;
 
             //Appending the password
+            pswrd="";
             for (int i = 0; i < 9; i++) {
-                aux += clave[rand() % 33];
+                pswrd += clave[rand() % 33];
             }
-            aux += "\n";
+            paciente.contrasena=pswrd;
+            RegistroPaciente.insert(pswrd,paciente);
+            aux +=DNI+','+date+','+name+','+lastn+','+telef+','+pswrd+"\n";
         }
 
         std::ofstream myFile;
@@ -233,7 +263,9 @@ public:
     }
 
     void IniciarPrograma(){
+        Paciente paciente;
         int opc;
+        string pswrd;
         GeneradorDatos();
         do{
             header();
@@ -247,10 +279,26 @@ public:
                     SignIn();system("cls"); break;
                 case 3:
                     VerHistorial(); break;
-                default:
+                case 4:
+                    header();
+                    system("cls");
+                    cout<<"Ingrese contrasenha: ";
+                    cin>>pswrd;
+                    paciente=RegistroPaciente.operator[](pswrd);
+                    if(paciente.nombres!="")
+                        bannerMostrar(paciente);
+                    else cout<<"No se encontro al usuario"<<endl;
+                    system("pause"); break;
+                case 5:
+                    header();
+                    system("cls");
+                    cout<<"Ingrese contrasenha: ";
+                    cin>>pswrd;
+                    RegistroPaciente.erase(pswrd);
+                    default:
                     system("cls");
             }
-        } while(opc != 4);
+        } while(opc != 6);
     }
 
     void reservarCitas(){ // Interaccion

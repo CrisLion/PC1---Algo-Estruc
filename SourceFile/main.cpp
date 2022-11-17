@@ -1,5 +1,5 @@
 #include "../Application/Controladora.hpp"
-
+#include <ctime>
 int main(){
     srand(time(NULL));
     
