@@ -20,8 +20,11 @@ struct Date
         return this->year * 10000 + this->month * 100 + this->day;
     }
 
-    bool operator>(Date& other){ // fech1 < fecha2
+    bool operator>(const Date& other) const { // fech1 > fecha2
         return this->gatherDateAtributes() > other.gatherDateAtributes();   
+    }
+    bool operator<(const Date& other) const { // fech1 < fecha2
+        return this->gatherDateAtributes() < other.gatherDateAtributes();   
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Date& obj) {
