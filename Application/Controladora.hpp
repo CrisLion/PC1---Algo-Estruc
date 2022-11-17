@@ -168,7 +168,7 @@ public:
         string nombre;
         string apellido;        
         string telefono;        
-        string contrasena;
+        string contrasena,auxcontrasena;
         Lista<string> temporal;
 
         cout << "Ingresa su DNI: ";
@@ -189,7 +189,8 @@ public:
         paciente.nombres=nombre;paciente.apellidos=apellido;
         paciente.telefono=telefono;paciente.contrasena=contrasena;
 
-        RegistroPaciente.insert(contrasena,paciente);
+        auxcontrasena=contrasena; auxcontrasena.erase(5,auxcontrasena.size());
+        RegistroPaciente.insert(auxcontrasena,paciente);
     }
 
     void GeneradorDatos(){
@@ -206,7 +207,7 @@ public:
            "L","g","c","s","#","q","z","u","i","o","P","n","M","B","X","Z","R","H","k" };
 
         string aux = "";
-        string DNI,date,name,lastn,telef,pswrd;
+        string DNI,date,name,lastn,telef,pswrd,auxpswrd;
         for (int i = 0; i < 20; i++) {
 
             //Appending a DNI
@@ -233,12 +234,12 @@ public:
 
             //Appending a name
             name="";
-            name += nombres[(rand() % 10) + 1];
+            name += nombres[(rand() % 10) ];
             paciente.nombres=name;
 
             //Appending a last name
             lastn="";
-            lastn += apellidos[(rand() % 10) + 1];
+            lastn += apellidos[(rand() % 10) ];
             paciente.apellidos=lastn;
 
             //Appending the telephone
@@ -252,7 +253,8 @@ public:
                 pswrd += clave[rand() % 33];
             }
             paciente.contrasena=pswrd;
-            RegistroPaciente.insert(pswrd,paciente);
+            auxpswrd=pswrd; auxpswrd.erase(5,auxpswrd.size());
+            RegistroPaciente.insert(auxpswrd,paciente);
             aux +=DNI+','+date+','+name+','+lastn+','+telef+','+pswrd+"\n";
         }
 
@@ -284,6 +286,7 @@ public:
                     system("cls");
                     cout<<"Ingrese contrasenha: ";
                     cin>>pswrd;
+                    pswrd.erase(5,pswrd.size());
                     paciente=RegistroPaciente.operator[](pswrd);
                     if(paciente.nombres!="")
                         bannerMostrar(paciente);
