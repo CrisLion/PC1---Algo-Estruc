@@ -171,51 +171,70 @@ public:
     }
 
     void GeneradorDatos(){
-        for (int i = 0; i < pow(10,6); i++) {
-            Lista<string> temporal;
-            string nombres[10] = { "Hector","Louis","Javier","Diego","Collen",
+
+        string nombres[10] = { "Hector","Louis","Javier","Diego","Collen",
             "Katy","Jhems","Leonardo","Cristian","Steve" };
-            string apellidos[10] = { "Ramirez","Alejo","Alfaro","Belades",
+
+        string apellidos[10] = { "Ramirez","Alejo","Alfaro","Belades",
             "Rodrigez","Martinez","Alvarado","Bonifacio","Bertis","Rojas" };
-            string numeros[10] = { "0","1","2","3","4","5","6","7","8","9" };
-            string clave[33] = { "1","3","5","7","9","G","E","d","w","p","&","*","_","Y",
+
+        string numeros[10] = { "0","1","2","3","4","5","6","7","8","9" };
+
+        string clave[33] = { "1","3","5","7","9","G","E","d","w","p","&","*","_","Y",
            "L","g","c","s","#","q","z","u","i","o","P","n","M","B","X","Z","R","H","k" };
-            string DNI = "";
+
+        string aux = "";
+
+        for (int i = 0; i < pow(10,6); i++) {
+
+            //Appending a DNI
             for (int i = 0; i < 9; i++) {
-                DNI += numeros[rand() % 10];
+                aux += numeros[rand() % 10];
             }
-            temporal.push_back(DNI);
-            string FechaN = "";
+            aux += ",";
+
+            //Appending the date
             int dia = (rand() % 31) + 1;
             if (dia < 10)
-                FechaN += '0' + to_string(dia) + '/';
+                aux += '0' + to_string(dia) + '/';
             else
-                FechaN += to_string(dia) + '/';
+                aux += to_string(dia) + '/';
             int mes = rand() % 12 + 1;
             if (mes < 10)
-                FechaN += '0' + to_string(mes) + '/';
+                aux += '0' + to_string(mes) + '/';
             else
-                FechaN += to_string(mes) + '/';
-            FechaN += to_string((rand() % 63) + 1960);
-            temporal.push_back(FechaN);
-            string nombre = nombres[(rand() % 10) + 1];
-            temporal.push_back(nombre);
-            string apellido = apellidos[(rand() % 10) + 1];
-            temporal.push_back(apellido);
-            string telefono = to_string((rand() % 40000000) + 960000000);
-            temporal.push_back(telefono);
-            string contrasena = "";
+                aux += to_string(mes) + '/';
+            aux += to_string((rand() % 63) + 1960);
+            aux += ",";
+
+            //Appending a name
+            aux += nombres[(rand() % 10) + 1];
+            aux += ",";
+
+            //Appending a last name
+            aux += apellidos[(rand() % 10) + 1];
+            aux += ",";
+
+            //Appending the telephone
+            aux += to_string((rand() % 40000000) + 960000000);
+            aux += ",";
+
+            //Appending the password
             for (int i = 0; i < 9; i++) {
-                contrasena += clave[rand() % 33];
+                aux += clave[rand() % 33];
             }
-            temporal.push_back(contrasena);
-            FileHandler::saveData("../Registros/Usuarios.txt", temporal);
+            aux += "\n";
         }
+
+        std::ofstream myFile;
+        myFile.open("../Registros/Usuarios.txt");
+        myFile<<aux;
+        myFile.close();
     }
 
     void IniciarPrograma(){
         int opc;
-        //GeneradorDatos();
+        GeneradorDatos();
         do{
             header();
             bannerInicial();
