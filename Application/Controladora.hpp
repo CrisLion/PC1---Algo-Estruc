@@ -2,17 +2,18 @@
 #define __CONTROLADORA__
 
 #include <conio.h>
+#include <math.h>
 #include "../EsSaludEntities/EntidadesMedicas.hpp"
 #include "../StaticClasses/Verificador.hpp"
 #include "../StaticClasses/FileHandler.hpp"
 #include "../DoubleNodeStructures/ListaCD.hpp"
 #include "../SimpleNodeStructures/Cola.hpp"
 #include "../AdvancedSorting/SortingAlgorithms.hpp"
-#include <math.h>
-
+#include "../StaticClasses/Banner.hpp"
+#include "../StaticClasses/DataGenerator.hpp"
 
 #define CANTIDAD_CITAS 10
-#define CANTIDAD_MAX_COLA 5
+#define CANTIDAD_MAX_COLA 1
 #define ARRIBA 72
 #define ABAJO 80
 #define IZQUIERDA 75
@@ -35,49 +36,6 @@ private:
     vector<Cita> citasReservadasV;
     vector<Medicacion> medicacionesDelPacienteV;
 
-    void header(){
-        cout << "========================================\n";
-        cout << "|               EsLaSalud              |\n";
-        cout << "========================================\n";
-        cout << "                                        \n";
-    }
-    void bannerInicial(){
-        cout << "        ========================        \n";
-        cout << "        |   (1) => Ingresar    |        \n";
-        cout << "        |   (2) => Registrase  |        \n";
-        cout << "        |   (3) => Historial   |        \n";
-        cout << "        |   (4) => Salir       |        \n";
-        cout << "        ========================        \n";
-        cout << "                                        \n";
-    }
-    void bannerPrincipal(string nombrePaciente) {
-        cout << "Hola "<< nombrePaciente << '\n';
-        cout << "        ========================        \n";
-        cout << "        |    (1) => Citas       |        \n";
-        cout << "        |    (2) => Recetas     |        \n";
-        cout << "        |    (3) => Salir       |        \n";
-        cout << "        ========================        \n";
-        cout << "                                        \n";
-    }
-
-    void bannerCitas() {
-        cout << "      ============================      \n";
-        cout << "      |   (1) => Reservar cita   |      \n";
-        cout << "      |   (2) => Ver mi cita     |      \n";
-        cout << "      |      (3) => Salir        |      \n";
-        cout << "      ============================      \n";
-        cout << "                                        \n";
-    }
-
-    void bannerEspera(const int& tam){
-        cout << "      ============================      \n";
-        cout << "      |       "<< tam <<" en la cola       |      \n";
-        cout << "      |      Espere su turno     |       \n";
-        cout << "      |            0.0           |      \n";
-        cout << "      ============================      \n";
-        cout << "                                        \n";
-    }
-
     void GenerarCola(int n){ //rand() % CANTIDAD_MAX_COLA +1
         if (n == 0) return;
         this->colaEspera.enQueue(Paciente());
@@ -87,7 +45,7 @@ private:
     void Descolar(){
         do{
             system("cls");
-            bannerEspera(this->colaEspera.Size());
+            Banner::bannerEspera(this->colaEspera.Size());
             this->colaEspera.deQueue();
             _sleep(2000);
         }while(this->colaEspera.Size() != 0);
@@ -95,22 +53,22 @@ private:
 
     void VerHistorial(){
         system("cls");
-        header();
+        Banner::header();
         Pila<string> pilaHistorial;
         FileHandler::LoadHistory("../Registros/Historial.txt",pilaHistorial);
         auto PrintValue = [] (string &a) ->void {cout<<a<<endl;};
         pilaHistorial.seek(PrintValue);
         getch();
+        system("cls");
     }
     
 public:
     Controladora() {}
     ~Controladora() { delete objPaciente; }
     
-    
-    void logIn(){
+    int logIn(){
         system("cls");
-        header();
+        Banner::header();
 // ---
         string DNI;
         string contrasena;
@@ -121,6 +79,8 @@ public:
         getline(std::cin,DNI);
         cout << "Ingrese su contrasena: ";
         getline(std::cin,contrasena);
+
+        if (DNI == "admin" && contrasena == "admin") return 1;
 
         if(Verificador::verificarUsuario(DNI,contrasena)){
             objPaciente = new Paciente();
@@ -133,7 +93,7 @@ public:
             temporal.push_back(objPaciente->apellidos);
             FileHandler::saveData("../Registros/Historial.txt",temporal);
 
-            return;
+            return 2;
         }
         else {
             contador--;
@@ -143,6 +103,7 @@ public:
             if (contador== 0) exit(0);
             logIn();
         }
+        return 0;
     }
 
     void SignIn(){        
@@ -170,87 +131,34 @@ public:
         FileHandler::saveData("../Registros/Usuarios.txt",temporal);
     }
 
-    void GeneradorDatos(){
-
-        string nombres[10] = { "Hector","Louis","Javier","Diego","Collen",
-            "Katy","Jhems","Leonardo","Cristian","Steve" };
-
-        string apellidos[10] = { "Ramirez","Alejo","Alfaro","Belades",
-            "Rodrigez","Martinez","Alvarado","Bonifacio","Bertis","Rojas" };
-
-        string numeros[10] = { "0","1","2","3","4","5","6","7","8","9" };
-
-        string clave[33] = { "1","3","5","7","9","G","E","d","w","p","&","*","_","Y",
-           "L","g","c","s","#","q","z","u","i","o","P","n","M","B","X","Z","R","H","k" };
-
-        string aux = "";
-
-        for (int i = 0; i < pow(10,6); i++) {
-
-            //Appending a DNI
-            for (int i = 0; i < 9; i++) {
-                aux += numeros[rand() % 10];
-            }
-            aux += ",";
-
-            //Appending the date
-            int dia = (rand() % 31) + 1;
-            if (dia < 10)
-                aux += '0' + to_string(dia) + '/';
-            else
-                aux += to_string(dia) + '/';
-            int mes = rand() % 12 + 1;
-            if (mes < 10)
-                aux += '0' + to_string(mes) + '/';
-            else
-                aux += to_string(mes) + '/';
-            aux += to_string((rand() % 63) + 1960);
-            aux += ",";
-
-            //Appending a name
-            aux += nombres[(rand() % 10) + 1];
-            aux += ",";
-
-            //Appending a last name
-            aux += apellidos[(rand() % 10) + 1];
-            aux += ",";
-
-            //Appending the telephone
-            aux += to_string((rand() % 40000000) + 960000000);
-            aux += ",";
-
-            //Appending the password
-            for (int i = 0; i < 9; i++) {
-                aux += clave[rand() % 33];
-            }
-            aux += "\n";
-        }
-
-        std::ofstream myFile;
-        myFile.open("../Registros/Usuarios.txt");
-        myFile<<aux;
-        myFile.close();
-    }
-
     void IniciarPrograma(){
         int opc;
-        GeneradorDatos();
+        DataGenerator::GeneradorDatos();
+        system("cls");
         do{
-            header();
-            bannerInicial();
+            Banner::header();
+            Banner::bannerInicial();
             cout << "Opcion: ";
             cin>> opc; cin.ignore(1);
             switch (opc){
-                case 1: 
-                    logIn(); system("cls"); MenuPrincipal();break;
-                case 2: 
-                    SignIn();system("cls"); break;
-                case 3:
-                    VerHistorial(); break;
+                case 1:{
+                    int aux = logIn();
+                    system("cls");
+                    if (aux == 1) 
+                        MenuPrincipalAdmin();
+                    if (aux == 2) 
+                        MenuPrincipalUser();
+                    break;
+                }
+                case 2:{
+                    SignIn();
+                    system("cls");
+                    break;
+                }
                 default:
                     system("cls");
             }
-        } while(opc != 4);
+        } while(opc != 3);
     }
 
     void reservarCitas(){ // Interaccion
@@ -259,7 +167,7 @@ public:
         Descolar();
 
         system("cls");
-        header();
+        Banner::header();
         
         ListaCD<Cita> CitasDisponibles;
         for(int i = 0; i < CANTIDAD_CITAS; i++){
@@ -276,7 +184,7 @@ public:
              * contacto
              */
             system("cls");
-            header();
+            Banner::header();
             cout << "==========================================\n";
             cout << "| " << char(190) << " "<< (*iter).objMedico.nombres << ", " << (*iter).objMedico.apellidos << '\n';
             cout << "| " << char(190) << " "<< (*iter).objMedico.especialidad << '\n';
@@ -308,16 +216,15 @@ public:
         }while(true);
     }
 
-
     void verMisCitas(){
         system("cls");
-        header();
+        Banner::header();
         Iterador<Cita> iter = citasReservadas.begin();
 
         do{
             //Dibujar ficha de Cita
             system("cls");
-            header();
+            Banner::header();
             cout << "==========================================\n";
             cout << "| " << char(190) << " "<< (*iter).objMedico.nombres << ", " << (*iter).objMedico.apellidos << '\n';
             cout << "| " << char(190) << " "<< (*iter).objMedico.especialidad << '\n';
@@ -328,7 +235,8 @@ public:
             
             cout<<"-> Siguiente"<<endl;
             cout<<"<- Atras"<<endl;
-            cout<<"^ Ordenar por fecha"<<endl;
+            cout<<"/\\ Ordenar por fecha"<<endl;
+            cout<<"\\/ Informacion"<<endl;
             cout<<"ESC Salir"<<endl;
             
             switch(getch()){
@@ -336,13 +244,16 @@ public:
                     ++iter; break;
                 case IZQUIERDA:
                     --iter; break;
-                case ARRIBA:
-                    {
-                        auto compare = [] (Cita& a, Cita& key) -> bool {return a.fecha > key.fecha;};
+                case ARRIBA: {
+                        auto compare = [] (const Cita& a,const Cita& key) -> bool {return a.fecha > key.fecha;};
                         citasReservadas.Sort(compare);
                         iter = citasReservadas.begin();
                         break;
                     }
+                case ABAJO: {
+                    VerCitas();
+                    break;
+                }
                 case ESC:
                     return;
             }
@@ -351,17 +262,18 @@ public:
 
     void verMisMedicaciones(){ // solo lectura
         system("cls");
-        header();
+        Banner::header();
         
         Iterador<Medicacion> iter = medicacionesDelPaciente.begin();
         do{
             //Dibujar ficha de Receta
             system("cls");
-            header();
+            Banner::header();
             cout << "==========================================\n";
             cout << "| " << char(190) << " "<< (*iter).objMedico.nombres << ", " << (*iter).objMedico.apellidos << '\n';
             cout << "| " << char(190) << " "<< (*iter).objMedico.especialidad << '\n';
             cout << "| " << char(190) << " "<< (*iter).medicamento<< '\n';
+            cout << "| " << char(190) << " Tomar cada "<< (*iter).tiempoPorMedicina << " horas" << '\n';
             cout << "==========================================\n";
 
             cout<<"-> Siguiente"<<endl;
@@ -375,7 +287,7 @@ public:
                 case IZQUIERDA:
                     --iter; break;
                 case ARRIBA:{
-                    VerRegistrio();
+                    VerRegistro();
                     break;
                 }
                 case ESC:
@@ -385,51 +297,105 @@ public:
         }while(true);
     }
 
-    void VerRegistrio(){
-        system("cls");
-        header();
-        auto compare = [](const Medicacion& a,const  Medicacion& b) -> bool  {
-            return a < b;
-        };
-        quickSort<Medicacion>(medicacionesDelPacienteV, compare, 0, medicacionesDelPacienteV.size() - 1);
-        // MergeSort<Medicacion>(medicacionesDelPacienteV, compare, 0 , medicacionesDelPacienteV.size() - 1);
+    void VerRegistro(){
+        short opc;
+        do {
+            system("cls");
+            Banner::header();
 
-        for (int  i = 0; i < medicacionesDelPacienteV.size(); i++)
-        {
-            std::cout << medicacionesDelPacienteV.at(i) << '\n';
-        }
-        cin.get();
-    }
-    void MenuCitas(){
-        system("cls");
-        header();
-        bannerCitas();
-        int opc; cin>>opc;
-        switch (opc){
-            case 1:                
-                reservarCitas(); break;
-                break;
-            case 2:
-                if(citasReservadas.size() != 0) verMisCitas();
-                break;
-            case 3:
-                system("cls");
-                return;
-        }
-    }
-
-    void MenuPrincipal(){ //Aqui hay recursion
-        int opc; 
+            cout << "01) Por orden alfabetico\n";
+            cout << "02) Por tiempo\n";
+            cout << "03) Salir\n";
+            cout << "Ingrese la opcion: ";
+            
+            cin >> opc;
+            switch (opc) {
+                case 1: {
+                    auto compare = [](const Medicacion& a,const  Medicacion& b) -> bool  {
+                        return a < b;
+                    };
+                    quickSort<Medicacion>(medicacionesDelPacienteV, compare, 0, medicacionesDelPacienteV.size() - 1);
+                    cout << "==========================================\n";
+                    cout << "Medicamento:\tTomar cada:\tRecetado por:\n";
+                    for (int  i = 0; i < medicacionesDelPacienteV.size(); i++) {
+                        std::cout << i + 1 << "| " << medicacionesDelPacienteV.at(i) << '\n';
+                    }
+                    cout << "==========================================\n";
+                    getch();
+                    VerRegistro();
+                    break;
+                }
+                case 2: {
+                    auto compare = [](const Medicacion& a,const  Medicacion& b) -> bool  {
+                        return a > b;
+                    };
+                    MergeSort<Medicacion>(medicacionesDelPacienteV, compare, 0 , medicacionesDelPacienteV.size() - 1);
+                    cout << "==========================================\n";
+                    cout << "Medicamento:\tTomar cada:\tRecetado por:\n";
+                    for (int  i = 0; i < medicacionesDelPacienteV.size(); i++) {
+                        std::cout << i + 1 << "| " <<  medicacionesDelPacienteV.at(i) << '\n';
+                    }
+                    cout << "==========================================\n";
+                    getch();
+                    VerRegistro();
+                    break;
+                }
+                case 3:
+                    return;
+            }                      
+        } while (opc < 3 || opc > 0);
         
+    }
+
+    void VerCitas(){
+        system("cls");
+        Banner::header();
+        auto compare = [] (const Cita& a,const Cita& key) -> bool {return a.fecha > key.fecha;};
+        HeapSort<Cita>(citasReservadasV,compare);
+        cout << "==========================================\n";
+        cout << " " << char(190) << " Cita mas proxima:\n \t-";
+        cout << " " <<  citasReservadasV.at(0) << '\n';
+        cout << " " << char(190) << " Cita mas lejana:\n \t-";
+        cout << " " <<  citasReservadasV.at(citasReservadasV.size() - 1) << '\n';
+        cout << "==========================================\n";
+        getch();
+
+    }
+    
+    void MenuCitas(){
+        int opc;
+        do {
+            system("cls");
+            Banner::header();
+            Banner::bannerCitas();
+            cin>>opc;
+            switch (opc){
+                case 1:                
+                    reservarCitas(); break;
+                    break;
+                case 2:
+                    if(citasReservadas.size() != 0) verMisCitas();
+                    break;
+                case 3:
+                    system("cls");
+                    return;
+            }
+            
+        } while (opc < 4 || opc > 0);
+        
+    }
+
+    void MenuPrincipalUser(){ //Aqui hay recursion
+        int opc; 
         do{
             system("cls");
-            header();
-            bannerPrincipal(objPaciente->nombres);
+            Banner::header();
+            Banner::bannerPrincipalUser(objPaciente->nombres);
             cin>>opc;
             if (opc > 3 || opc < 1) {
                 std::cout << "Ingrese solo las opciones del menu";
                 getch();
-                MenuPrincipal();
+                MenuPrincipalUser();
             }
 
             switch (opc){
@@ -444,6 +410,30 @@ public:
                 return;
             }
         } while(opc != 3);
+    }
+
+    void MenuPrincipalAdmin(){
+        int opc;
+
+        do {
+            system("cls");
+            Banner::header();
+            Banner::bannerPrincipalAdmin();
+            cin >> opc;
+            switch (opc) {
+                case 1:{
+                    VerHistorial();
+                    break;
+                }
+                case 2:
+                system("cls");
+                return;
+            }
+            
+        } while (opc < 3 || opc > 0);
+        
+        
+        getch();
     }
 };
 #endif
