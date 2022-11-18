@@ -2,9 +2,16 @@
 #define __ENTIDADESMEDICAS__
 #include <iostream>
 #include <string>
+#include <vector>
+#include <fstream>
+#include "..\AdvancedStructures\AVL_Tree.hpp"
+#include "..\AdvancedStructures\HashTable.hpp"
 #include "Date.hpp"
+
 using std::string;
 using std::to_string;
+using std::vector;
+using std::ifstream;
 
 namespace EntidadesMedicas{
 
@@ -93,6 +100,101 @@ namespace EntidadesMedicas{
             COUT <<" La cita sera el dia: " << obj.fecha << "\n\t  En la especialidad de: " << obj.objMedico.especialidad;
             return COUT;
         }
+    };
+
+    struct Registro{
+        string DNI;
+        Date fechaNacimiento;
+        string nombres;
+        string apellidos;
+        string telefono;
+        string contrasena;
+    };
+
+    class Admin{
+    private:
+        vector<Registro> temporal;
+        AVL_T<Registro>* tree;
+        HashTable<Registro>* ht;
+
+    private:
+        void _ObtenerDatos(){
+            //Apertirar txt en modo lectura
+            ifstream myFile;
+            string line;
+            myFile.open("../Registros/Usuarios.txt");
+            
+            while(std::getline(myFile,line)){
+
+                std::stringstream total(line);
+                string word;
+                
+
+                string DNI;
+                string fecha;
+                string nombres;
+                string apellidos;
+                string telefono;
+                string contrasena;
+
+                std::getline(total,DNI,',');
+                std::getline(total,fecha,',');
+                std::getline(total,nombres,',');
+                std::getline(total,apellidos,',');
+                std::getline(total,telefono,',');
+                std::getline(total,contrasena,',');
+            
+
+                Registro obj = {DNI,Date(fecha),nombres,apellidos,telefono,contrasena};
+                temporal.emplace_back(obj); //->llenar datos en el vector // O(n)      
+            }
+            myFile.close();
+
+            for(Registro &registro : temporal){
+
+                string key = "";
+                key += registro.contrasena[0];
+                key += registro.contrasena[1];
+                key += registro.contrasena[2];
+                key += registro.contrasena[3]; 
+
+                tree->insert(registro); //->llenar el arbol a partir del vector // O(n*log(n))
+                ht->insert(key, registro); //->llenar la hashtable a partir del vector // O(n*m) n: los registros, m: el tam de la lista colisionada
+            }
+
+            //Limpiando el temporal
+            temporal.clear();
+        }
+
+    public:
+        //Metodos
+        Admin(){
+            auto print = [] (const Registro& registro) -> void {std::cout<<registro.fechaNacimiento<<" "<<registro.nombres<<" "<<registro.apellidos<<" // ";};
+            auto compare = [] (const Registro& registro1, const Registro& registro2) -> bool {return registro1.fechaNacimiento > registro2.fechaNacimiento; };
+            
+            tree = new AVL_T<Registro>(print,compare);
+            ht = new HashTable<Registro>(pow(10,6),print);
+            _ObtenerDatos();
+        }
+
+        void RegistroDelPacienteMasJoven(){
+            Registro registro = tree->getMax();
+            std::cout<<"Paciente mas joven: "<<std::endl;
+            std::cout<<registro.fechaNacimiento<<" "<<registro.nombres<<" "<<registro.apellidos<<std::endl;
+        }
+
+        void RegistroDelPacienteMásViejo(){
+            Registro registro = tree->getMin();
+            std::cout<<"Paciente mas viejo: "<<std::endl;
+            std::cout<<registro.fechaNacimiento<<" "<<registro.nombres<<" "<<registro.apellidos<<std::endl;
+        }
+
+        void BuscarRegistro(string& key){
+            Registro registroEncontrado = (*ht)[key];
+            std::cout<<"Registro solicitado: "<<std::endl;
+            std::cout<<registroEncontrado.fechaNacimiento<<" "<<registroEncontrado.nombres<<" "<<registroEncontrado.apellidos<<std::endl;
+        }
+
     };
 
 }
