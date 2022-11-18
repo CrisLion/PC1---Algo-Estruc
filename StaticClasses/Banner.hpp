@@ -33,8 +33,11 @@ struct Banner {
     static void bannerPrincipalAdmin() {
         cout << "Hola Admin" << '\n';
         cout << "        =========================        \n";
-        cout << "        |   (1) => Historial    |        \n";
-        cout << "        |    (2) => Salir       |        \n";
+        cout << "        |   (1) => Historial             |        \n";
+        cout << "        |   (2) => Paciente mas joven    |        \n";
+        cout << "        |   (3) => Paciente mas viejo    |        \n";
+        cout << "        |   (4) => Buscar Paciente       |        \n";
+        cout << "        |    (5) => Salir                |        \n";
         cout << "        =========================        \n";
         cout << "                                         \n";
     }
