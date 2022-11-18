@@ -68,7 +68,7 @@ public:
         for(int i = 0; i < _capacity; i++){
             if (_arr[i] != nullptr) delete _arr[i];
         }
-        delete _arr;
+        delete[] _arr;
     }
 
     size_t get_capacity(){

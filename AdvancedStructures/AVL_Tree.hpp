@@ -77,6 +77,32 @@ public:
 
     AVL_T(void (*print)(const T&), bool (*comparisonCriteria)(const T&,const T&)) : _root(nullptr), _size(0ll), _print(print), _compare(comparisonCriteria) {}
 
+    ~AVL_T(){
+        
+        Node** temp_array = new Node*[_size];
+        int current_index = 0;
+
+        std::stack<Node*> aux;
+        aux.push(_root);
+        
+        while(!aux.empty()){
+            Node* node = aux.top();
+            aux.pop();
+            temp_array[current_index] = node;
+            ++current_index;
+            if (node->right)
+                aux.push(node->right);
+            if (node->left)
+                aux.push(node->left);
+        }
+
+        for(int i = 0; i < current_index; i++){
+            delete temp_array[i];
+        }
+
+        delete[] temp_array;
+    }
+
     void PreOrder(){
         std::stack<Node*> aux;
         aux.push(_root);

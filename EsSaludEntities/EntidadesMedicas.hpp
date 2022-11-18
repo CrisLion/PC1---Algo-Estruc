@@ -177,6 +177,11 @@ namespace EntidadesMedicas{
             _ObtenerDatos();
         }
 
+        ~Admin(){
+            delete tree;
+            delete ht;
+        }
+
         void RegistroDelPacienteMasJoven(){
             Registro registro = tree->getMax();
             std::cout<<"Paciente mas joven: "<<std::endl;
