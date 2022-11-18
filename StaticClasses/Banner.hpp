@@ -37,7 +37,8 @@ struct Banner {
         cout << "        |   (2) => Paciente mas joven    |        \n";
         cout << "        |   (3) => Paciente mas viejo    |        \n";
         cout << "        |   (4) => Buscar Paciente       |        \n";
-        cout << "        |    (5) => Salir                |        \n";
+        cout << "        |   (5) => Stock en Farmacia     |        \n";
+        cout << "        |    (6) => Salir                |        \n";
         cout << "        =========================        \n";
         cout << "                                         \n";
     }

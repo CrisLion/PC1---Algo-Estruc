@@ -415,6 +415,7 @@ public:
     void MenuPrincipalAdmin(){
         int opc;
         Admin objAdmin;
+        Farmacia objFarmacia;
 
         do {
             system("cls");
@@ -453,6 +454,10 @@ public:
                     break;
                 }
                 case 5:
+                    objFarmacia.ImprimirMedicamentosEnOrden();
+                    getch();
+                    break;
+                case 6:
                     system("cls");
                     return;
             }
