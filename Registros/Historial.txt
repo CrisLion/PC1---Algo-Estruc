@@ -27,3 +27,11 @@
 213850931,Farid,Castro
 285146489,Leonardo,Castro
 932411501,Ciro,Martinez
+851865126,Amaro,Bertis
+022408091,Baco,Fernandez
+941867312,Fausto,Araya
+706749333,Diego,Espinoza
+309122642,Enzo,Sepulveda
+029721616,Dante,Torres
+574298090,Casiano,Castillo
+206338468,Katy,Torres

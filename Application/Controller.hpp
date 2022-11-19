@@ -1,16 +1,18 @@
-#ifndef __CONTROLADORA__
-#define __CONTROLADORA__
+#pragma once
 
 #include <conio.h>
 #include <math.h>
-#include "../EsSaludEntities/EntidadesMedicas.hpp"
+
 #include "../StaticClasses/Verificador.hpp"
 #include "../StaticClasses/FileHandler.hpp"
+#include "../StaticClasses/Banner.hpp"
+#include "../StaticClasses/DataGenerator.hpp"
+#include "../StaticClasses/AdminHandler.hpp"
+
+#include "../EsSaludEntities/EntidadesMedicas.hpp"
 #include "../DoubleNodeStructures/ListaCD.hpp"
 #include "../SimpleNodeStructures/Cola.hpp"
 #include "../AdvancedSorting/SortingAlgorithms.hpp"
-#include "../StaticClasses/Banner.hpp"
-#include "../StaticClasses/DataGenerator.hpp"
 
 #define CANTIDAD_CITAS 10
 #define CANTIDAD_MAX_COLA 1
@@ -21,12 +23,10 @@
 #define ENTER 13
 #define ESC 27
 
-using std::cout;
-using std::vector;
 using namespace EntidadesMedicas;
 using namespace SortingAlgorithms;
 
-class Controladora{
+class Controller{
 private:
     Paciente* objPaciente;
     ListaCD<Cita> citasReservadas;
@@ -51,25 +51,16 @@ private:
         }while(this->colaEspera.Size() != 0);
     }
 
-    void VerHistorial(){
-        system("cls");
-        Banner::header();
-        Pila<string> pilaHistorial;
-        FileHandler::LoadHistory("../Registros/Historial.txt",pilaHistorial);
-        auto PrintValue = [] (string &a) ->void {cout<<a<<endl;};
-        pilaHistorial.seek(PrintValue);
-        getch();
-        system("cls");
-    }
-    
 public:
-    Controladora() {}
-    ~Controladora() { delete objPaciente; }
+    Controller() {
+        DataGenerator::GeneradorDatos();
+    }
+    ~Controller() { delete objPaciente;}
     
     int logIn(){
         system("cls");
         Banner::header();
-// ---
+    // ---
         string DNI;
         string contrasena;
         static int contador = 3;
@@ -133,7 +124,6 @@ public:
 
     void IniciarPrograma(){
         int opc;
-        DataGenerator::GeneradorDatos();
         system("cls");
         do{
             Banner::header();
@@ -145,7 +135,7 @@ public:
                     int aux = logIn();
                     system("cls");
                     if (aux == 1) 
-                        MenuPrincipalAdmin();
+                        AdminHandler::MenuPrincipalAdmin();
                     if (aux == 2) 
                         MenuPrincipalUser();
                     break;
@@ -159,6 +149,94 @@ public:
                     system("cls");
             }
         } while(opc != 3);
+    }
+
+    void MenuPrincipalUser(){ //Aqui hay recursion
+        int opc; 
+        do{
+            system("cls");
+            Banner::header();
+            Banner::bannerPrincipalUser(objPaciente->nombres);
+            cin>>opc;
+            if (opc > 3 || opc < 1) {
+                std::cout << "Ingrese solo las opciones del menu";
+                getch();
+                MenuPrincipalUser();
+            }
+
+            switch (opc){
+                case 1:
+                    MenuCitas();                
+                    break;
+                case 2:
+                    if(medicacionesDelPaciente.size() != 0) verMisMedicaciones();
+                    break;
+                case 3:
+                    IniciarPrograma();
+                    break;
+            }
+        } while(opc != 3);
+    }
+
+    void MenuCitas(){
+        int opc;
+        do {
+            system("cls");
+            Banner::header();
+            Banner::bannerCitas();
+            cin>>opc;
+            switch (opc){
+                case 1:                
+                    reservarCitas(); break;
+                    break;
+                case 2:
+                    if(citasReservadas.size() != 0) verMisCitas();
+                    break;
+                case 3:
+                    MenuPrincipalUser();
+                    break;
+            }
+            
+        } while (opc < 4 || opc > 0);
+        
+    }
+
+    void verMisMedicaciones(){ // solo lectura
+        system("cls");
+        Banner::header();
+        
+        Iterador<Medicacion> iter = medicacionesDelPaciente.begin();
+        do{
+            //Dibujar ficha de Receta
+            system("cls");
+            Banner::header();
+            cout << "==========================================\n";
+            cout << "| " << char(190) << " "<< (*iter).objMedico.nombres << ", " << (*iter).objMedico.apellidos << '\n';
+            cout << "| " << char(190) << " "<< (*iter).objMedico.especialidad << '\n';
+            cout << "| " << char(190) << " "<< (*iter).medicamento<< '\n';
+            cout << "| " << char(190) << " Tomar cada "<< (*iter).tiempoPorMedicina << " horas" << '\n';
+            cout << "==========================================\n";
+
+            cout<<"-> Siguiente"<<endl;
+            cout<<"<- Atras"<<endl;
+            cout<<"/\\ Ver registro: "<<endl;
+            cout<<"ESC Salir"<<endl;
+           
+            switch(getch()){
+                case DERECHA:
+                    ++iter; break;
+                case IZQUIERDA:
+                    --iter; break;
+                case ARRIBA:{
+                    VerRegistro();
+                    break;
+                }
+                case ESC:
+                    MenuPrincipalUser();
+                    break;
+            }
+
+        }while(true);
     }
 
     void reservarCitas(){ // Interaccion
@@ -210,7 +288,8 @@ public:
                 case IZQUIERDA:
                     --iter; break;
                 case ESC:
-                    return ;
+                    MenuCitas();
+                    break;
             }
 
         }while(true);
@@ -255,48 +334,12 @@ public:
                     break;
                 }
                 case ESC:
-                    return;
-            }
-        }while(true);
-    }
-
-    void verMisMedicaciones(){ // solo lectura
-        system("cls");
-        Banner::header();
-        
-        Iterador<Medicacion> iter = medicacionesDelPaciente.begin();
-        do{
-            //Dibujar ficha de Receta
-            system("cls");
-            Banner::header();
-            cout << "==========================================\n";
-            cout << "| " << char(190) << " "<< (*iter).objMedico.nombres << ", " << (*iter).objMedico.apellidos << '\n';
-            cout << "| " << char(190) << " "<< (*iter).objMedico.especialidad << '\n';
-            cout << "| " << char(190) << " "<< (*iter).medicamento<< '\n';
-            cout << "| " << char(190) << " Tomar cada "<< (*iter).tiempoPorMedicina << " horas" << '\n';
-            cout << "==========================================\n";
-
-            cout<<"-> Siguiente"<<endl;
-            cout<<"<- Atras"<<endl;
-            cout<<"/\\ Ver registro: "<<endl;
-            cout<<"ESC Salir"<<endl;
-           
-            switch(getch()){
-                case DERECHA:
-                    ++iter; break;
-                case IZQUIERDA:
-                    --iter; break;
-                case ARRIBA:{
-                    VerRegistro();
+                    MenuCitas();
                     break;
-                }
-                case ESC:
-                    return ;
             }
-
         }while(true);
     }
-
+    
     void VerRegistro(){
         short opc;
         do {
@@ -340,8 +383,9 @@ public:
                     VerRegistro();
                     break;
                 }
-                case 3:
-                    return;
+                case 3:{
+                    verMisMedicaciones();
+                }
             }                      
         } while (opc < 3 || opc > 0);
         
@@ -361,111 +405,4 @@ public:
         getch();
 
     }
-    
-    void MenuCitas(){
-        int opc;
-        do {
-            system("cls");
-            Banner::header();
-            Banner::bannerCitas();
-            cin>>opc;
-            switch (opc){
-                case 1:                
-                    reservarCitas(); break;
-                    break;
-                case 2:
-                    if(citasReservadas.size() != 0) verMisCitas();
-                    break;
-                case 3:
-                    system("cls");
-                    return;
-            }
-            
-        } while (opc < 4 || opc > 0);
-        
-    }
-
-    void MenuPrincipalUser(){ //Aqui hay recursion
-        int opc; 
-        do{
-            system("cls");
-            Banner::header();
-            Banner::bannerPrincipalUser(objPaciente->nombres);
-            cin>>opc;
-            if (opc > 3 || opc < 1) {
-                std::cout << "Ingrese solo las opciones del menu";
-                getch();
-                MenuPrincipalUser();
-            }
-
-            switch (opc){
-                case 1:
-                    MenuCitas();                
-                    break;
-                case 2:
-                    if(medicacionesDelPaciente.size() != 0) verMisMedicaciones();
-                    break;                
-                case 3:
-                system("cls");
-                return;
-            }
-        } while(opc != 3);
-    }
-
-    void MenuPrincipalAdmin(){
-        int opc;
-        Admin objAdmin;
-        Farmacia objFarmacia;
-
-        do {
-            system("cls");
-            Banner::header();
-            Banner::bannerPrincipalAdmin();
-            cin >> opc;
-            switch (opc) {
-                case 1:{
-                    VerHistorial();
-                    break;
-                }
-                case 2:
-                    objAdmin.RegistroDelPacienteMasJoven();
-                    getch();
-                    break;
-                case 3:
-                    objAdmin.RegistroDelPacienteMásViejo();
-                    getch();
-                    break;
-                case 4:{
-                    string pass;
-                    string key = "";
-                    std::cin.ignore();
-
-                    std::cout<<"Ingrese una contrasena: ";
-                    getline(std::cin,pass);
-                    
-                    key += pass[0];
-                    key += pass[1];
-                    key += pass[2];
-                    key += pass[3];
-
-                    objAdmin.BuscarRegistro(key);
-                    
-                    getch();
-                    break;
-                }
-                case 5:
-                    objFarmacia.ImprimirMedicamentosEnOrden();
-                    getch();
-                    break;
-                case 6:
-                    system("cls");
-                    return;
-            }
-            
-        } while (opc < 3 || opc > 0);
-        
-        
-        getch();
-    }
 };
-#endif

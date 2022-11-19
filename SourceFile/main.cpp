@@ -1,12 +1,11 @@
-#include "../Application/Controladora.hpp"
+#include "../Application/Controller.hpp"
 
 int main(){
     srand(time(NULL));
-    
-    Controladora* controladoraObj = new Controladora();
-    controladoraObj->IniciarPrograma();
 
-    delete controladoraObj;
+    Controller* controllerObj = new Controller();
+    controllerObj->IniciarPrograma();
 
+    delete controllerObj;
     return 0;
 }
