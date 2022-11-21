@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Nodo.hpp"
 #include "Iterador.hpp"
 #include <iostream>
