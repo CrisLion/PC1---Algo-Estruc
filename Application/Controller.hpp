@@ -172,7 +172,8 @@ public:
                     if(medicacionesDelPaciente.size() != 0) verMisMedicaciones();
                     break;
                 case 3:
-                    IniciarPrograma();
+                    system("cls");
+                //    IniciarPrograma();
                     break;
             }
         } while(opc != 3);
@@ -193,7 +194,7 @@ public:
                     if(citasReservadas.size() != 0) verMisCitas();
                     break;
                 case 3:
-                    MenuPrincipalUser();
+                    return;
                     break;
             }
             
@@ -204,6 +205,8 @@ public:
     void verMisMedicaciones(){ // solo lectura
         system("cls");
         Banner::header();
+
+        bool salir = true;
         
         Iterador<Medicacion> iter = medicacionesDelPaciente.begin();
         do{
@@ -232,11 +235,11 @@ public:
                     break;
                 }
                 case ESC:
-                    MenuPrincipalUser();
+                    salir = false;
                     break;
             }
 
-        }while(true);
+        }while(salir);
     }
 
     void reservarCitas(){ // Interaccion
@@ -288,7 +291,7 @@ public:
                 case IZQUIERDA:
                     --iter; break;
                 case ESC:
-                    MenuCitas();
+                    return;
                     break;
             }
 

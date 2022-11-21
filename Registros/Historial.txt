@@ -35,3 +35,10 @@
 029721616,Dante,Torres
 574298090,Casiano,Castillo
 206338468,Katy,Torres
+254529440,Diego,Belades
+731482795,Donato,Fernandez
+759186256,Einar,Alejo
+662509200,Aldo,Rodrigez
+842408988,Edan,Ramirez
+842408988,Edan,Ramirez
+481625269,Hector,Castro
