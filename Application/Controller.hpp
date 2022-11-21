@@ -337,7 +337,7 @@ public:
                     break;
                 }
                 case ESC:
-                    MenuCitas();
+                    return;
                     break;
             }
         }while(true);
@@ -387,7 +387,8 @@ public:
                     break;
                 }
                 case 3:{
-                    verMisMedicaciones();
+                    return;
+                    break;
                 }
             }                      
         } while (opc < 3 || opc > 0);
