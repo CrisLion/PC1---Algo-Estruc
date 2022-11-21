@@ -185,11 +185,8 @@ namespace EntidadesMedicas{
             myFile.close();
 
             for(Registro &registro : temporal){
-
-                string key = registro.contrasena; 
-
                 tree->insert(registro); //->llenar el arbol a partir del vector // O(n*log(n))
-                ht->insert(key, registro); //->llenar la hashtable a partir del vector // O(n*m) n: los registros, m: el tam de la lista colisionada
+                ht->insert(registro.contrasena, registro); //->llenar la hashtable a partir del vector // O(n*m) n: los registros, m: el tam de la lista colisionada
             }
             //Limpiando el temporal
             temporal.clear();

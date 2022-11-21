@@ -45,15 +45,11 @@ public:
                     break;
                 case 4:{
                     string pass;
-                    string key = "";
                     std::cin.ignore();
 
                     std::cout<<"Ingrese una contrasena: ";
                     getline(std::cin,pass);
-                    
-                    key = pass;
-
-                    objAdmin.BuscarRegistro(key);
+                    objAdmin.BuscarRegistro(pass);
                     
                     getch();
                     break;
