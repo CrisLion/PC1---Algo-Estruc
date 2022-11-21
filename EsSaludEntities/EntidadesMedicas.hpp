@@ -186,16 +186,11 @@ namespace EntidadesMedicas{
 
             for(Registro &registro : temporal){
 
-                string key = "";
-                key += registro.contrasena[0];
-                key += registro.contrasena[1];
-                key += registro.contrasena[2];
-                key += registro.contrasena[3]; 
+                string key = registro.contrasena; 
 
                 tree->insert(registro); //->llenar el arbol a partir del vector // O(n*log(n))
                 ht->insert(key, registro); //->llenar la hashtable a partir del vector // O(n*m) n: los registros, m: el tam de la lista colisionada
             }
-
             //Limpiando el temporal
             temporal.clear();
         }

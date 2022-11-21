@@ -51,10 +51,7 @@ public:
                     std::cout<<"Ingrese una contrasena: ";
                     getline(std::cin,pass);
                     
-                    key += pass[0];
-                    key += pass[1];
-                    key += pass[2];
-                    key += pass[3];
+                    key = pass;
 
                     objAdmin.BuscarRegistro(key);
                     
